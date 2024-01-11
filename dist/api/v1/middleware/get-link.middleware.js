@@ -18,12 +18,31 @@ const database_1 = __importDefault(require("../../../config/database"));
 const getIp_1 = require("../../../helpers/getIp");
 const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const ip = yield (0, getIp_1.getPublicIp)();
+        const ipLocal = req.body.ipLocal;
+        const ipCookie = req.body.ipCookie;
+        let ip = "";
+        console.log(req.rawHeaders.includes("http://localhost:2709/home"));
+        if (ipLocal !== undefined) {
+            ip = ipLocal;
+        }
+        else if (ipCookie !== undefined) {
+            ip = ipCookie;
+        }
+        else {
+            ip = yield (0, getIp_1.getPublicIp)();
+        }
         const now = new Date();
         const expiryDate = new Date();
         expiryDate.setMinutes(now.getMinutes() + 5);
         const querySnapshot = yield (0, firestore_1.getDocs)((0, firestore_1.query)((0, firestore_1.collection)(database_1.default, "ip-check"), (0, firestore_1.where)("ip", "==", ip)));
         if (querySnapshot.empty) {
+            if (ipLocal !== undefined) {
+                res.status(302).json({
+                    code: 302,
+                    message: "Đừng Nghịch Lung Tung Hãy Thay Đổi Lại Giá Trị Bạn Đã Nghịch Trước Đó!",
+                });
+                return;
+            }
             const data = {
                 ip: ip,
                 time: expiryDate.toISOString(),
@@ -35,9 +54,12 @@ const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
             const result = docSnap.data();
             const expiryDate = new Date(result.time);
             if (new Date() < expiryDate) {
+                res.cookie('nami-ip-nodejs', ip, { maxAge: 9000000000, httpOnly: true });
                 res.status(401).json({
                     code: 401,
                     message: "Bạn Đã Bị Block Truy Cập Vì Sử Dụng Quá Nhiều Lần Trong 5 Phút!",
+                    ip: ip,
+                    raw: req.rawHeaders
                 });
                 return;
             }
@@ -51,12 +73,13 @@ const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
                 });
             }
         }
+        req["ip-public"] = ip;
         next();
     }
     catch (error) {
         res.status(500).json({
             message: "Lỗi Server!",
-            code: 500
+            code: 500,
         });
     }
 });

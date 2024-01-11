@@ -35,7 +35,7 @@ export const getLink = async function (
       time: expiryDate.toISOString(),
       free: "",
     };
-
+   
     const docRef = await addDoc(collection(db, "get-key"), data);
     //mã hóa id của document
     const encrypted = encryptedData(docRef.id);
@@ -57,8 +57,8 @@ export const getLink = async function (
       res.status(400).json({ error: "Bad Request", code: 400 });
       return;
     }
-
-    res.status(200).json({ link: dataResponse2.shortenedUrl, code: 200 });
+    res.cookie('nami-ip-nodejs', req["ip-public"], { maxAge: 9000000000, httpOnly: true });
+    res.status(200).json({ link: dataResponse2.shortenedUrl, code: 200,ip: req["ip-public"] });
   } catch (error) {
     //Thông báo lỗi 500 đến người dùng server lỗi.
     console.error("Error in API:", error);
