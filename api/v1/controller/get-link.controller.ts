@@ -132,11 +132,13 @@ export const checkLink = async function (
       sendResponse(res, 200, "Key Còn Hạn!");
       return;
     }
+
     //Nếu hwid không trùng khớp với hwid đã lưu thì báo lỗi
     if (result.hwid !== hwid) {
       sendResponse(res, 401, "Bạn Không Phải Người Sở Hữu Key Này!");
       return;
     }
+    
     //Nếu key đã hết hạn thì báo lỗi
     const expiryDate = new Date(result.time);
     if (new Date() > expiryDate) {
