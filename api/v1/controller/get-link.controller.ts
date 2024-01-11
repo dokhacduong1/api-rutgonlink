@@ -99,7 +99,7 @@ export const checkLink = async function (
         await updateDoc(docRef, { hwid, time });
         res.status(200).json({ message: "Key Còn Hạn!", code: 200 });
       } 
-      else {
+      else{
         if (result.hwid === hwid) {
           res.status(200).json({ message: "Key Còn Hạn!", code: 200 });
         }else{
