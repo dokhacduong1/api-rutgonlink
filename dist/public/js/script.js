@@ -16,7 +16,7 @@ if (clickLink) {
 
       if (data.code === 200) {
         window.location.href = data.link;
-      } else if (data.code === 400) {
+      } else if (data.code === 401) {
         alert(data.message);
         window.location.reload();
       } else if (data.code === 500) {
