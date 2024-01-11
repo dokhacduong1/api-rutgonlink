@@ -1,0 +1,75 @@
+mixin pagination(objectPagination,inputNumber)
+    nav(class="")
+        //Nhảy đến trang đầu tiên
+        ul(class="pagination")
+            li(class="page-item")
+                    button(
+                    class="page-link"
+                    button-pagination = 1
+                    ) <<
+
+
+            //Nếu page hiện tại lớn hơn 1 thì mới hiện Trang Trước
+            if(objectPagination.currentPage >1)
+                li(class="page-item")
+                    button(
+                    class="page-link"
+                    button-pagination = objectPagination.currentPage-1
+                    ) Trang Trước
+
+
+            //Nếu trang hiện tại - trang mong muốn >= 1 thì in ra input để người dùng nhập số trang
+            if(objectPagination.currentPage - inputNumber >=1)
+                 li(class="page-item")
+                    input(
+                    class="page-link"
+                    placeholder ="..."
+                    button-pagination-input
+                    total-page = objectPagination.totalPage
+                    style ={"width":"56px"}
+                    type="number"
+                    min="0"
+                    max = objectPagination.totalPage
+                    )
+
+
+            //For này đầu tiên nó sẽ kiểm tra xem trang hiện tại -1 có = 0 hay không nếu có sẽ cho i =1 nếu không thì cho trang hiện tại -1
+            //Tiếp theo ta cho điều kiện nếu i <= trang hiện tại trừ cho inputNumber và i<=tổng số trang  để kết thúc vong lặp ngăn vòng lặp chạy quá tổng số trang
+            - for (let i = (objectPagination.currentPage-1 == 0 ? 1 : objectPagination.currentPage-1);(i<=objectPagination.currentPage+inputNumber && i<=objectPagination.totalPage);i++)
+                li(class=`page-item ${objectPagination.currentPage === i && "active"}`)
+                    button(
+                    class="page-link"
+                    button-pagination = i
+                    ) #{i}
+
+
+            //Nếu trang hiện tại - trang mong muốn < tổng số trang thì in ra input để người dùng nhập số trang
+            if(objectPagination.currentPage + inputNumber < objectPagination.totalPage)
+                 li(class="page-item")
+                    input(
+                    class="page-link"
+                    placeholder ="..."
+                    button-pagination-input
+                    total-page = objectPagination.totalPage
+                    style ={"width":"56px"}
+                    type="number"
+                     min="0"
+                    max = objectPagination.totalPage
+                    )
+
+
+            //Nếu page hiện tại nhỏ hơn tổng các page thì hiện trang kế tiếp
+            if(objectPagination.currentPage < objectPagination.totalPage)
+                li(class="page-item")
+                    button(
+                    class="page-link"
+                    button-pagination = objectPagination.currentPage+1
+                    ) Kế Tiếp
+
+
+            //Nhảy đến trang cuối cùng
+            li(class="page-item")
+                    button(
+                    class="page-link"
+                    button-pagination = objectPagination.totalPage
+                    ) >>
