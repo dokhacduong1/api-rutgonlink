@@ -7,7 +7,8 @@ import dotenv from "dotenv";
 import { generateRandomString } from "../../../helpers/generateToken";
 dotenv.config();
 const API_TOKEN = process.env.TOKEN_WEB1S;
-const URL_MAIL = "https://api-namilinklink.vercel.app/api/v1/get-link/success?key";
+const URL_MAIL =
+  "https://api-namilinklink.vercel.app/api/v1/get-link/success?key";
 // [POST] /api/v1/get-link/
 export const getLink = async function (
   req: Request,
@@ -23,7 +24,7 @@ export const getLink = async function (
     const encrypted = encryptedData(docRef.id);
     const randomAlias = generateRandomString(10);
     const link = `https://web1s.com/api?token=${API_TOKEN}&url=${URL_MAIL}=${encrypted}&alias=${randomAlias}`;
-    
+
     const response = await axios.get(link);
     const dataResponse = response.data;
     if (dataResponse.status === "error") {
@@ -45,23 +46,22 @@ export const success = async function (
 ): Promise<void> {
   try {
     const id = req.query.key;
-    if (!id) {
-      res.status(400).json({ error: "Bad Request", code: 400 });
-      return;
-    }
    
     const decId = decData(id);
     const docRef = doc(db, "get-key", decId);
     const docSnap = await getDoc(docRef);
+    const data = docSnap.data();
+  
     //Nếu tồn tại document thì trả về dữ liệu
-    if (docSnap.exists()) {
-      res.status(200).json({ data: docSnap.data(), code: 200 });
-    } else {
-      res.status(400).json({ error: "Bad Request", code: 400 });
-    }
+    res.render("pages/link/index.pug", {
+      pageTitle: "Key",
+      data: data,
+    });
   } catch (error) {
     //Thông báo lỗi 500 đến người dùng server lỗi.
     console.error("Error in API:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.render("pages/errors/404", {
+        pageTitle: "404 Not Found",
+      });
   }
 };

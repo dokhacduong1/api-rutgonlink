@@ -51,23 +51,20 @@ const success = function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const id = req.query.key;
-            if (!id) {
-                res.status(400).json({ error: "Bad Request", code: 400 });
-                return;
-            }
             const decId = (0, encryptedData_1.decData)(id);
             const docRef = (0, firestore_1.doc)(database_1.default, "get-key", decId);
             const docSnap = yield (0, firestore_1.getDoc)(docRef);
-            if (docSnap.exists()) {
-                res.status(200).json({ data: docSnap.data(), code: 200 });
-            }
-            else {
-                res.status(400).json({ error: "Bad Request", code: 400 });
-            }
+            const data = docSnap.data();
+            res.render("pages/link/index.pug", {
+                pageTitle: "Key",
+                data: data,
+            });
         }
         catch (error) {
             console.error("Error in API:", error);
-            res.status(500).json({ error: "Internal Server Error" });
+            res.render("pages/errors/404", {
+                pageTitle: "404 Not Found",
+            });
         }
     });
 };
