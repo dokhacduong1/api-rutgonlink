@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.success = exports.getLink = void 0;
+exports.checkLink = exports.success = exports.getLink = void 0;
 const axios_1 = __importDefault(require("axios"));
 const database_1 = __importDefault(require("../../../config/database"));
 const firestore_1 = require("firebase/firestore");
@@ -73,3 +73,36 @@ const success = function (req, res) {
     });
 };
 exports.success = success;
+const checkLink = function (req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const { key, hwid, time } = req.body;
+            const querySnapshot = yield (0, firestore_1.getDocs)((0, firestore_1.query)((0, firestore_1.collection)(database_1.default, "get-key"), (0, firestore_1.where)("key", "==", key)));
+            if (!querySnapshot.empty) {
+                const docSnap = querySnapshot.docs[0];
+                const result = docSnap.data();
+                if (result.hwid === "" && result.time === "") {
+                    const docRef = (0, firestore_1.doc)(database_1.default, "get-key", docSnap.id);
+                    yield (0, firestore_1.updateDoc)(docRef, { hwid, time });
+                    res.status(200).json({ message: "Key Còn Hạn!", code: 200 });
+                }
+                else {
+                    if (result.hwid === hwid) {
+                        res.status(200).json({ message: "Key Còn Hạn!", code: 200 });
+                    }
+                    else {
+                        res.status(401).json({ message: "Bạn Không Phải Người Sở Hữu Key Này!", code: 401 });
+                    }
+                }
+            }
+            else {
+                res.status(404).json({ message: "Key Không Tồn Tại", code: 404 });
+            }
+        }
+        catch (error) {
+            console.error("Error in API:", error);
+            res.status(500).json({ message: "Key Không Tồn Tại", code: 500 });
+        }
+    });
+};
+exports.checkLink = checkLink;

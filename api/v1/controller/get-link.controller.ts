@@ -1,7 +1,16 @@
 import { Request, Response } from "express";
 import axios from "axios";
 import db from "../../../config/database";
-import { collection, getDocs, addDoc, doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  doc,
+  getDoc,
+  query,
+  where,
+  updateDoc,
+} from "firebase/firestore";
 import { decData, encryptedData } from "../../../helpers/encryptedData";
 import dotenv from "dotenv";
 import { generateRandomString } from "../../../helpers/generateToken";
@@ -17,8 +26,8 @@ export const getLink = async function (
   try {
     const data = {
       key: generateRandomString(20),
-      hwid:"",
-      time:"",
+      hwid: "",
+      time: "",
     };
 
     const docRef = await addDoc(collection(db, "get-key"), data);
@@ -50,12 +59,12 @@ export const success = async function (
 ): Promise<void> {
   try {
     const id = req.query.key;
-   
+
     const decId = decData(id);
     const docRef = doc(db, "get-key", decId);
     const docSnap = await getDoc(docRef);
     const data = docSnap.data();
-  
+
     //Nếu tồn tại document thì trả về dữ liệu
     res.render("pages/link/index.pug", {
       pageTitle: "Key",
@@ -65,7 +74,44 @@ export const success = async function (
     //Thông báo lỗi 500 đến người dùng server lỗi.
     console.error("Error in API:", error);
     res.render("pages/errors/404", {
-        pageTitle: "404 Not Found",
-      });
+      pageTitle: "404 Not Found",
+    });
   }
 };
+
+// [post] /api/v1/get-link/check
+export const checkLink = async function (
+  req: Request,
+  res: Response
+): Promise<void> {
+  try {
+    const { key, hwid, time } = req.body;
+    const querySnapshot = await getDocs(
+      query(collection(db, "get-key"), where("key", "==", key))
+    );
+
+    if (!querySnapshot.empty) {
+      const docSnap = querySnapshot.docs[0];
+      const result = docSnap.data();
+
+      if (result.hwid === "" && result.time === "") {
+        const docRef = doc(db, "get-key", docSnap.id);
+        await updateDoc(docRef, { hwid, time });
+        res.status(200).json({ message: "Key Còn Hạn!", code: 200 });
+      } 
+      else {
+        if (result.hwid === hwid) {
+          res.status(200).json({ message: "Key Còn Hạn!", code: 200 });
+        }else{
+          res.status(401).json({ message: "Bạn Không Phải Người Sở Hữu Key Này!", code: 401 });
+        }
+      }
+    } else {
+      res.status(404).json({ message: "Key Không Tồn Tại", code: 404 });
+    }
+  } catch (error) {
+    console.error("Error in API:", error);
+    res.status(500).json({ message: "Key Không Tồn Tại", code: 500 });
+  }
+};
+
