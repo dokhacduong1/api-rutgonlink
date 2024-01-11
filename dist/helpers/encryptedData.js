@@ -10,11 +10,15 @@ dotenv_1.default.config();
 const secretKey = process.env.SECRET_KEY;
 function encryptedData(data) {
     var ciphertext = crypto_js_1.default.AES.encrypt(JSON.stringify(data), secretKey).toString();
-    return ciphertext;
+    var encodedCiphertext = encodeURIComponent(ciphertext);
+    encodedCiphertext = encodedCiphertext.replace(/\./g, '_').replace(/\//g, '-').replace(/\+/g, '*');
+    return encodedCiphertext;
 }
 exports.encryptedData = encryptedData;
 function decData(encryptedDataFromServer) {
-    let bytes = crypto_js_1.default.AES.decrypt(encryptedDataFromServer, secretKey);
+    encryptedDataFromServer = encryptedDataFromServer.replace(/_/g, '.').replace(/-/g, '/').replace(/\*/g, '+');
+    var decodedData = decodeURIComponent(encryptedDataFromServer);
+    let bytes = crypto_js_1.default.AES.decrypt(decodedData, secretKey);
     let data = bytes.toString(crypto_js_1.default.enc.Utf8);
     return JSON.parse(data);
 }

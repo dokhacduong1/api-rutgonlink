@@ -9,12 +9,20 @@ const secretKey = process.env.SECRET_KEY;
 export function encryptedData(data: any) : string {
     // Encrypt
     var ciphertext : string = CryptoJS.AES.encrypt(JSON.stringify(data), secretKey).toString();
-    return ciphertext;
+    // Encode to URL-safe format
+    var encodedCiphertext = encodeURIComponent(ciphertext);
+    // Replace special characters
+    encodedCiphertext = encodedCiphertext.replace(/\./g, '_').replace(/\//g, '-').replace(/\+/g, '*');
+    return encodedCiphertext;
 }
 
 export function decData(encryptedDataFromServer) {
-    let bytes = CryptoJS.AES.decrypt(encryptedDataFromServer,secretKey);
+    // Replace non-special characters back to special characters
+    encryptedDataFromServer = encryptedDataFromServer.replace(/_/g, '.').replace(/-/g, '/').replace(/\*/g, '+');
+    // Decode from URL-safe format
+    var decodedData = decodeURIComponent(encryptedDataFromServer);
+    // Decrypt
+    let bytes = CryptoJS.AES.decrypt(decodedData, secretKey);
     let data = bytes.toString(CryptoJS.enc.Utf8);
-    return JSON.parse(data)
-
+    return JSON.parse(data);
 }
