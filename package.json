@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.ts",
-    "build": "tsc && copyfiles -u 1 views/**/* dist/views",
+    "build": "tsc && copyfiles -u 1 views/**/* dist/views && copyfiles -u 1 public/**/* dist/public",
     "add-build": "git add dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
