@@ -41,8 +41,8 @@ export const auth = async (
       const expiryDate = new Date(result.time);
 
       if (new Date() < expiryDate) {
-        res.status(400).json({
-          code: 400,
+        res.status(401).json({
+          code: 401,
           message:
             "Bạn Đã Bị Block Truy Cập Vì Sử Dụng Quá Nhiều Lần Trong 5 Phút!",
         });
