@@ -3,7 +3,6 @@ import routesVersion1 from "./api/v1/router/index.routes";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import cors from "cors";
-import path from "path";
 const app = express();
 //Cấu hình để nhận data body khi request
 app.use(bodyParser.json({ limit: "50mb" }));
@@ -21,7 +20,7 @@ app.use(express.static(`${__dirname}/public`));
 
 
 //App set
-app.set('views', path.join(__dirname, 'views'));
+app.set("views", `${__dirname}/views`);
 app.set("view engine", "pug");
 //Import cấu hình file .env
 dotenv.config();
@@ -32,9 +31,9 @@ const port: number | string = process.env.PORT || 2709;
 routesVersion1(app);
 //Tạo ra trang 404
 app.get("*", (req, res) => {
-    res.render("pages/errors/404", {
-      pageTitle: "404 Not Found",
-    });
+    res.send(`<h1 class="text-center" style="
+    text-align: center;
+">404 Not Found</h1>`);
   });
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

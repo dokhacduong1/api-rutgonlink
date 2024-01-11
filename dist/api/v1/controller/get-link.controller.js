@@ -42,7 +42,9 @@ const getLink = function (req, res) {
         }
         catch (error) {
             console.error("Error in API:", error);
-            res.status(500).json({ error: "Internal Server Error" });
+            res.send(`<h1 class="text-center" style="
+    text-align: center;
+">404 Not Found</h1>`);
         }
     });
 };
@@ -62,9 +64,9 @@ const success = function (req, res) {
         }
         catch (error) {
             console.error("Error in API:", error);
-            res.render("pages/errors/404", {
-                pageTitle: "404 Not Found",
-            });
+            res.send(`<h1 class="text-center" style="
+    text-align: center;
+">404 Not Found</h1>`);
         }
     });
 };
