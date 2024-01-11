@@ -21,7 +21,14 @@ export const auth = async (
     const ipLocal = req.body.ipLocal;
     const ipCookie = req.body.ipCookie;
     let ip = "";
-    console.log(req.rawHeaders.includes("http://localhost:2709/home"))
+    if (!req.rawHeaders.includes("https://api-namilinklink.vercel.app/home")) {
+      res.status(404).json({
+        code: 404,
+        message: "Not Found!",
+      });
+      return;
+    }
+
     if (ipLocal !== undefined) {
       ip = ipLocal;
     } else if (ipCookie !== undefined) {
@@ -60,13 +67,12 @@ export const auth = async (
       const expiryDate = new Date(result.time);
 
       if (new Date() < expiryDate) {
-        res.cookie('nami-ip-nodejs', ip, { maxAge: 9000000000, httpOnly: true });
+       
         res.status(401).json({
           code: 401,
           message:
             "Bạn Đã Bị Block Truy Cập Vì Sử Dụng Quá Nhiều Lần Trong 5 Phút!",
           ip: ip,
-          raw:req.rawHeaders
         });
         return;
       } else {

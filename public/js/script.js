@@ -35,8 +35,8 @@ if (clickLink) {
        else if (data.code === 401) {
         localStorage.setItem('nami-ip', data.ip);
         document.cookie = `nami-ip=${data.ip}; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
-        // alert(data.message);
-        // window.location.reload();
+        alert(data.message);
+        window.location.reload();
       } else if (data.code === 500) {
         alert(data.message)
         window.location.reload();
