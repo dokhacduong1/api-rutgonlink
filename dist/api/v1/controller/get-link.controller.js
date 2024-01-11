@@ -26,7 +26,7 @@ const getLink = function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const data = {
-                key: (0, generateToken_1.generateRandomString)(20),
+                key: "Free_" + (0, generateToken_1.generateRandomString)(10),
                 hwid: "",
                 time: "",
             };

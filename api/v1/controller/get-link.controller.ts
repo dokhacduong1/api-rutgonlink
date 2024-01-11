@@ -25,7 +25,7 @@ export const getLink = async function (
 ): Promise<void> {
   try {
     const data = {
-      key: generateRandomString(20),
+      key: "Free_"+generateRandomString(10),
       hwid: "",
       time: "",
     };
