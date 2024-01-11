@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 import { generateRandomString } from "../../../helpers/generateToken";
 dotenv.config();
 const API_TOKEN = process.env.TOKEN_WEB1S;
-const URL_MAIL = "https://api-rutgonlink.vercel.app/api/v1/get-link/success?key";
+const URL_MAIL = "https://api-namilinklink.vercel.app/api/v1/get-link/success?key";
 // [POST] /api/v1/get-link/
 export const getLink = async function (
   req: Request,

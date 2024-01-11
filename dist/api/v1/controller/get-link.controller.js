@@ -21,7 +21,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const generateToken_1 = require("../../../helpers/generateToken");
 dotenv_1.default.config();
 const API_TOKEN = process.env.TOKEN_WEB1S;
-const URL_MAIL = "https://api-rutgonlink.vercel.app/api/v1/get-link/success?key";
+const URL_MAIL = "https://api-namilinklink.vercel.app/api/v1/get-link/success?key";
 const getLink = function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
