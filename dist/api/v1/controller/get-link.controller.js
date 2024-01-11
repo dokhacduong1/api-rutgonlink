@@ -40,7 +40,16 @@ const getLink = function (req, res) {
                 res.status(400).json({ error: "Bad Request", code: 400 });
                 return;
             }
-            res.status(200).json({ link: dataResponse.shortenedUrl, code: 200 });
+            const randomAlias2 = (0, generateToken_1.generateRandomString)(10);
+            const link2 = `https://web1s.com/api?token=${API_TOKEN}&url=${dataResponse.shortenedUrl}&alias=${randomAlias2}`;
+            const response2 = yield axios_1.default.get(link2);
+            const dataResponse2 = response2.data;
+            if (dataResponse2.status === "error") {
+                res.status(400).json({ error: "Bad Request", code: 400 });
+                return;
+            }
+            console.log(dataResponse2);
+            res.status(200).json({ link: dataResponse2.shortenedUrl, code: 200 });
         }
         catch (error) {
             console.error("Error in API:", error);

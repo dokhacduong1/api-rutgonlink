@@ -42,7 +42,17 @@ export const getLink = async function (
       res.status(400).json({ error: "Bad Request", code: 400 });
       return;
     }
-    res.status(200).json({ link: dataResponse.shortenedUrl, code: 200 });
+
+    const randomAlias2 = generateRandomString(10);
+    const link2 = `https://web1s.com/api?token=${API_TOKEN}&url=${dataResponse.shortenedUrl}&alias=${randomAlias2}`;
+    const response2 = await axios.get(link2);
+    const dataResponse2 = response2.data;
+    if (dataResponse2.status === "error") {
+      res.status(400).json({ error: "Bad Request", code: 400 });
+      return;
+    }
+    console.log(dataResponse2);
+    res.status(200).json({ link: dataResponse2.shortenedUrl, code: 200 });
   } catch (error) {
     //Thông báo lỗi 500 đến người dùng server lỗi.
     console.error("Error in API:", error);
