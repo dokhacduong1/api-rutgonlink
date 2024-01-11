@@ -1,0 +1,9 @@
+extends ../../layout/default.pug
+include ../../mixins/pagination.pug
+block main
+    div(class="container home" style='padding: 50px;display:flex').text-center.justify-content-center
+        .card(style='width: 38rem;border:none !important;')
+            .card-body.text-center(style='padding: 50px;border-radius: 10px;box-shadow: 0 0 10px 0 rgba(0,0,0,.2)')
+                h1(style='font-size:30px;font-weight:700').card-title Ấn Vào <span style='color:red'>GET LINK</span> Đây Để Lấy Key!
+                button.btn.btn-dark(href='#' style="font-weight:700" class="click-link") GET LINK
+                p(class="wait-link" style="color:red") Đợi Xíu Đang Lấy Link Cho Bạn...
