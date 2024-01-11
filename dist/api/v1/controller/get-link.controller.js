@@ -32,7 +32,6 @@ const getLink = function (req, res) {
             const encrypted = (0, encryptedData_1.encryptedData)(docRef.id);
             const randomAlias = (0, generateToken_1.generateRandomString)(10);
             const link = `https://web1s.com/api?token=${API_TOKEN}&url=${URL_MAIL}=${encrypted}&alias=${randomAlias}`;
-            console.log(encrypted);
             const response = yield axios_1.default.get(link);
             const dataResponse = response.data;
             if (dataResponse.status === "error") {
@@ -56,7 +55,6 @@ const success = function (req, res) {
                 res.status(400).json({ error: "Bad Request", code: 400 });
                 return;
             }
-            console.log(req.query.key);
             const decId = (0, encryptedData_1.decData)(id);
             const docRef = (0, firestore_1.doc)(database_1.default, "get-key", decId);
             const docSnap = yield (0, firestore_1.getDoc)(docRef);

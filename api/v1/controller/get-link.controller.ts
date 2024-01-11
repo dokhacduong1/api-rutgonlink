@@ -23,7 +23,7 @@ export const getLink = async function (
     const encrypted = encryptedData(docRef.id);
     const randomAlias = generateRandomString(10);
     const link = `https://web1s.com/api?token=${API_TOKEN}&url=${URL_MAIL}=${encrypted}&alias=${randomAlias}`;
-    console.log(encrypted)
+    
     const response = await axios.get(link);
     const dataResponse = response.data;
     if (dataResponse.status === "error") {
@@ -49,7 +49,7 @@ export const success = async function (
       res.status(400).json({ error: "Bad Request", code: 400 });
       return;
     }
-    console.log(req.query.key);
+   
     const decId = decData(id);
     const docRef = doc(db, "get-key", decId);
     const docSnap = await getDoc(docRef);
