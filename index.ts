@@ -31,9 +31,9 @@ const port: number | string = process.env.PORT || 2709;
 routesVersion1(app);
 //Tạo ra trang 404
 app.get("*", (req, res) => {
-    res.send(`<h1 class="text-center" style="
-    text-align: center;
-">404 Not Found</h1>`);
+    res.render("pages/errors/404", {
+        pageTitle: "404 Not Found",
+      });
   });
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

@@ -35,9 +35,9 @@ export const getLink = async function (
   } catch (error) {
     //Thông báo lỗi 500 đến người dùng server lỗi.
     console.error("Error in API:", error);
-    res.send(`<h1 class="text-center" style="
-    text-align: center;
-">404 Not Found</h1>`);
+    res.render("pages/errors/404", {
+      pageTitle: "404 Not Found",
+    });
   }
 };
 
@@ -48,12 +48,12 @@ export const success = async function (
 ): Promise<void> {
   try {
     const id = req.query.key;
-
+   
     const decId = decData(id);
     const docRef = doc(db, "get-key", decId);
     const docSnap = await getDoc(docRef);
     const data = docSnap.data();
-
+  
     //Nếu tồn tại document thì trả về dữ liệu
     res.render("pages/link/index.pug", {
       pageTitle: "Key",
@@ -62,8 +62,8 @@ export const success = async function (
   } catch (error) {
     //Thông báo lỗi 500 đến người dùng server lỗi.
     console.error("Error in API:", error);
-    res.send(`<h1 class="text-center" style="
-    text-align: center;
-">404 Not Found</h1>`);
+    res.render("pages/errors/404", {
+        pageTitle: "404 Not Found",
+      });
   }
 };

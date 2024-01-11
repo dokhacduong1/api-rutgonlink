@@ -21,9 +21,9 @@ dotenv_1.default.config();
 const port = process.env.PORT || 2709;
 (0, index_routes_1.default)(app);
 app.get("*", (req, res) => {
-    res.send(`<h1 class="text-center" style="
-    text-align: center;
-">404 Not Found</h1>`);
+    res.render("pages/errors/404", {
+        pageTitle: "404 Not Found",
+    });
 });
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
