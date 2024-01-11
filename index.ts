@@ -3,6 +3,7 @@ import routesVersion1 from "./api/v1/router/index.routes";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import cors from "cors";
+import path from "path";
 const app = express();
 //Cấu hình để nhận data body khi request
 app.use(bodyParser.json({ limit: "50mb" }));
@@ -20,7 +21,7 @@ app.use(express.static(`${__dirname}/public`));
 
 
 //App set
-app.set("views", `${__dirname}/views`);
+app.set('views', path.join(__dirname, 'views'));
 app.set("view engine", "pug");
 //Import cấu hình file .env
 dotenv.config();
