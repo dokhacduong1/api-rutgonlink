@@ -25,11 +25,12 @@ if (clickLink) {
       },
     })
     const data = await response.json();
-    if(data.code===200){
+    if (data.code === 200) {
       window.location.href = data.link;
-    }else{
+    } else {
       alert("Lỗi Rồi Liện Hệ Admin")
     }
     waitLink.style.display = 'none';
   })
 }
+
