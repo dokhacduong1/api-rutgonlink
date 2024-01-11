@@ -10,6 +10,7 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
 app.use(body_parser_1.default.json({ limit: "50mb" }));
+app.set('trust proxy', true);
 app.use((0, cors_1.default)({
     origin: "*",
     methods: ["POST", "GET", "DELETE", "PUT", "PATCH", "OPTIONS"],

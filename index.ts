@@ -6,6 +6,7 @@ import cors from "cors";
 const app = express();
 //Cấu hình để nhận data body khi request
 app.use(bodyParser.json({ limit: "50mb" }));
+app.set('trust proxy', true);
 
 app.use(
   cors({
@@ -31,6 +32,7 @@ const port: number | string = process.env.PORT || 2709;
 routesVersion1(app);
 //Tạo ra trang 404
 app.get("*", (req, res) => {
+
     res.render("pages/errors/404", {
         pageTitle: "404 Not Found",
       });
