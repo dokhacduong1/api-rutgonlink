@@ -35,6 +35,7 @@
     "@types/node": "^20.10.8",
     "copyfiles": "^2.4.1",
     "husky": "^8.0.3",
+    "javascript-obfuscator": "^4.1.0",
     "nodemon": "^3.0.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
