@@ -4,8 +4,7 @@ exports.getLinkValidate = void 0;
 const getLinkValidate = (req, res, next) => {
     const key = req.body.key;
     const hwid = req.body.hwid;
-    const time = req.body.time;
-    if (!key || !hwid || !time) {
+    if (!key || !hwid) {
         res.status(400).json({ error: "Chưa Có Dữ Liệu!" });
         return;
     }
