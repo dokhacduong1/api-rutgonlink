@@ -14,7 +14,7 @@ app.use((0, cors_1.default)({
     origin: "*",
     methods: ["POST", "GET", "DELETE", "PUT", "PATCH", "OPTIONS"],
 }));
-app.use(express_1.default.static(`${__dirname}/public`));
+app.use(express_1.default.static(`public`));
 app.set("views", "./views");
 app.set("view engine", "pug");
 dotenv_1.default.config();

@@ -14,7 +14,7 @@ app.use(
   })
 );
 //Cấu hình thư mục cho public  để người dùng có thể truy cập được trong mục public
-app.use(express.static(`${__dirname}/public`));
+app.use(express.static(`public`));
 
 
 
