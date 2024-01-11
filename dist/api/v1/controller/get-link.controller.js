@@ -92,7 +92,7 @@ const checkLink = function (req, res) {
             const querySnapshot = yield (0, firestore_1.getDocs)((0, firestore_1.query)((0, firestore_1.collection)(database_1.default, "get-key"), (0, firestore_1.where)("key", "==", key)));
             if (querySnapshot.empty) {
                 res.status(404).json({
-                    message: "Key Không Tồn Tại",
+                    message: "Key Không Tồn Tại!",
                     code: 404,
                 });
                 return;
@@ -115,6 +115,8 @@ const checkLink = function (req, res) {
             }
             const expiryDate = new Date(result.time);
             if (new Date() > expiryDate) {
+                const docRef = (0, firestore_1.doc)(database_1.default, "get-key", docSnap.id);
+                yield (0, firestore_1.deleteDoc)(docRef);
                 sendResponse(res, 400, "Key Đã Hết Hạn!");
                 return;
             }

@@ -11,6 +11,7 @@ import {
   query,
   where,
   updateDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import { decData, encryptedData } from "../../../helpers/encryptedData";
 import dotenv from "dotenv";
@@ -109,11 +110,11 @@ export const checkLink = async function (
     );
     //Nếu dữ liệu người dùng gửi lên là rỗng thì báo lỗi chưa có dữ liệu
     if (querySnapshot.empty) {
-       res.status(404).json({
-        message: "Key Không Tồn Tại",
+      res.status(404).json({
+        message: "Key Không Tồn Tại!",
         code: 404,
       });
-      return
+      return;
     }
     //Lấy dữ liệu của document đầu tiên
     const docSnap = querySnapshot.docs[0];
@@ -121,34 +122,36 @@ export const checkLink = async function (
     const result = docSnap.data();
     //Nếu tồn tại key miễn phí thì trả về dữ liệu
     if (result.free === "true") {
-       sendResponse(res, 200, "Key Còn Hạn!");
-       return
+      sendResponse(res, 200, "Key Còn Hạn!");
+      return;
     }
     //Nếu hwid là rỗng thì cập nhật hwid
     if (result.hwid === "") {
       const docRef = doc(db, "get-key", docSnap.id);
       await updateDoc(docRef, { hwid });
-       sendResponse(res, 200, "Key Còn Hạn!");
-       return
+      sendResponse(res, 200, "Key Còn Hạn!");
+      return;
     }
     //Nếu hwid không trùng khớp với hwid đã lưu thì báo lỗi
     if (result.hwid !== hwid) {
-       sendResponse(res, 401, "Bạn Không Phải Người Sở Hữu Key Này!");
-       return
+      sendResponse(res, 401, "Bạn Không Phải Người Sở Hữu Key Này!");
+      return;
     }
     //Nếu key đã hết hạn thì báo lỗi
     const expiryDate = new Date(result.time);
     if (new Date() > expiryDate) {
-       sendResponse(res, 400, "Key Đã Hết Hạn!");
-       return
+      //Xóa document
+      const docRef = doc(db, "get-key", docSnap.id);
+      await deleteDoc(docRef);
+      sendResponse(res, 400, "Key Đã Hết Hạn!");
+      return;
     }
     //Nếu không có lỗi nào xảy ra thì trả về dữ liệu
-     sendResponse(res, 200, "Key Còn Hạn!");
-     return
-  } 
-  catch (error) {
-     sendResponse(res, 500, "Lỗi Server!");
-     return
+    sendResponse(res, 200, "Key Còn Hạn!");
+    return;
+  } catch (error) {
+    sendResponse(res, 500, "Lỗi Server!");
+    return;
   }
 };
 
