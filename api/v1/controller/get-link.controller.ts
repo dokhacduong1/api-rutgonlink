@@ -17,6 +17,8 @@ export const getLink = async function (
   try {
     const data = {
       key: generateRandomString(20),
+      hwid:"",
+      time:"",
     };
 
     const docRef = await addDoc(collection(db, "get-key"), data);

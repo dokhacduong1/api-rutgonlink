@@ -27,6 +27,8 @@ const getLink = function (req, res) {
         try {
             const data = {
                 key: (0, generateToken_1.generateRandomString)(20),
+                hwid: "",
+                time: "",
             };
             const docRef = yield (0, firestore_1.addDoc)((0, firestore_1.collection)(database_1.default, "get-key"), data);
             const encrypted = (0, encryptedData_1.encryptedData)(docRef.id);
