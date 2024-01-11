@@ -14,13 +14,13 @@ app.use(
   })
 );
 //Cấu hình thư mục cho public  để người dùng có thể truy cập được trong mục public
-app.use(express.static(`public`));
+app.use(express.static(`${__dirname}/public`));
 
 
 
 
 //App set
-app.set("views", "./views");
+app.set("views", `${__dirname}/views`);
 app.set("view engine", "pug");
 //Import cấu hình file .env
 dotenv.config();

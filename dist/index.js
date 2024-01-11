@@ -14,8 +14,8 @@ app.use((0, cors_1.default)({
     origin: "*",
     methods: ["POST", "GET", "DELETE", "PUT", "PATCH", "OPTIONS"],
 }));
-app.use(express_1.default.static(`public`));
-app.set("views", "./views");
+app.use(express_1.default.static(`${__dirname}/public`));
+app.set("views", `${__dirname}/views`);
 app.set("view engine", "pug");
 dotenv_1.default.config();
 const port = process.env.PORT || 2709;
