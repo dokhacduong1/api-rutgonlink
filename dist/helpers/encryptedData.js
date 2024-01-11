@@ -11,15 +11,15 @@ const secretKey = process.env.SECRET_KEY;
 function encryptedData(data) {
     var ciphertext = crypto_js_1.default.AES.encrypt(JSON.stringify(data), secretKey).toString();
     var encodedCiphertext = encodeURIComponent(ciphertext);
-    encodedCiphertext = encodedCiphertext.replace(/\./g, '_').replace(/\//g, '-').replace(/\+/g, '*');
+    encodedCiphertext = encodedCiphertext.replace(/[^a-zA-Z0-9]/g, '!');
     return encodedCiphertext;
 }
 exports.encryptedData = encryptedData;
 function decData(encryptedDataFromServer) {
-    encryptedDataFromServer = encryptedDataFromServer.replace(/_/g, '.').replace(/-/g, '/').replace(/\*/g, '+');
-    var decodedData = decodeURIComponent(encryptedDataFromServer);
-    let bytes = crypto_js_1.default.AES.decrypt(decodedData, secretKey);
-    let data = bytes.toString(crypto_js_1.default.enc.Utf8);
-    return JSON.parse(data);
+    var decodedCiphertext = encryptedDataFromServer.replace(/!/g, '%');
+    decodedCiphertext = decodeURIComponent(decodedCiphertext);
+    let bytes = crypto_js_1.default.AES.decrypt(decodedCiphertext, secretKey);
+    let decryptedData = bytes.toString(crypto_js_1.default.enc.Utf8);
+    return JSON.parse(decryptedData);
 }
 exports.decData = decData;
