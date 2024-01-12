@@ -37,6 +37,7 @@ export const getLink = async function (
     };
    
     const docRef = await addDoc(collection(db, "get-key"), data);
+    console.log("Document written with ID: ", docRef.id);
     //mã hóa id của document
     const encrypted = encryptedData(docRef.id);
     const randomAlias = generateRandomString(10);
