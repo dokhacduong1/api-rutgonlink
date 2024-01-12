@@ -24,7 +24,7 @@ const getIp = (ipLocal, ipCookie) => __awaiter(void 0, void 0, void 0, function*
         return decodeURIComponent(ipCookie);
     }
     else {
-        return yield (0, getIp_1.getPublicIp)();
+        return yield (0, getIp_1.getPublicIpV6)();
     }
 });
 const setExpiryDate = (minutes) => {
@@ -83,10 +83,11 @@ const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
                 return;
             }
             if (new Date() < expiryDate) {
+                const test = yield (0, getIp_1.getPublicIpV6)();
                 res.status(401).json({
                     code: 401,
                     message: "Bạn Đã Bị Block Truy Cập Vì Sử Dụng Quá Nhiều Lần Trong 5 Phút!",
-                    ip: ip,
+                    ip: test,
                 });
                 return;
             }

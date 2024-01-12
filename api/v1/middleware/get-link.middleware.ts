@@ -9,7 +9,7 @@ import {
 } from "firebase/firestore";
 import { Request, Response } from "express";
 import db from "../../../config/database";
-import { getPublicIp } from "../../../helpers/getIp";
+import { getPublicIpV6 } from "../../../helpers/getIp";
 
 const getIp = async (ipLocal: string, ipCookie: string) => {
   if (ipLocal) {
@@ -17,7 +17,7 @@ const getIp = async (ipLocal: string, ipCookie: string) => {
   } else if (ipCookie) {
     return decodeURIComponent(ipCookie);
   } else {
-    return await getPublicIp();
+    return await getPublicIpV6();
   }
 };
 
@@ -89,11 +89,12 @@ export const auth = async (
         return;
       }
       if (new Date() < expiryDate) {
+        const test = await getPublicIpV6()
         res.status(401).json({
           code: 401,
           message:
             "Bạn Đã Bị Block Truy Cập Vì Sử Dụng Quá Nhiều Lần Trong 5 Phút!",
-          ip: ip,
+          ip: test,
         });
         return;
       } else {
