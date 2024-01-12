@@ -52,7 +52,7 @@ const getLink = function (req, res) {
                 res.status(400).json({ error: "Bad Request", code: 400 });
                 return;
             }
-            res.status(200).json({ link: dataResponse2.shortenedUrl, code: 200, ip: req["ip-public"] });
+            res.status(200).json({ link: dataResponse2.shortenedUrl, code: 200, ip: (0, encryptedData_1.encryptedDataString)(req["ip-public"]) });
         }
         catch (error) {
             console.error("Error in API:", error);

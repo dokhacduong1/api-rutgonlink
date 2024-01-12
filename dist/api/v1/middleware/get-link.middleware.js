@@ -15,15 +15,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.auth = void 0;
 const firestore_1 = require("firebase/firestore");
 const database_1 = __importDefault(require("../../../config/database"));
+const encryptedData_1 = require("../../../helpers/encryptedData");
 const getIp = (ipLocal, ipCookie, req) => __awaiter(void 0, void 0, void 0, function* () {
     if (ipLocal) {
-        return ipLocal;
+        return (0, encryptedData_1.decDataString)(ipLocal);
     }
     else if (ipCookie) {
-        return ipCookie;
+        return (0, encryptedData_1.decDataString)(ipCookie);
     }
     else {
-        return req.headers['x-forwarded-for'];
+        return "11";
     }
 });
 const setExpiryDate = (minutes) => {
@@ -65,7 +66,7 @@ const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
                 res.status(401).json({
                     code: 401,
                     message: "Mày Đã Bị Chặn 3 Ngày Vì Thích Nghịch WEB TAO DCMMM!",
-                    ip: ip,
+                    ip: (0, encryptedData_1.encryptedDataString)(ip),
                 });
                 return;
             }
@@ -77,7 +78,7 @@ const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
                 res.status(401).json({
                     code: 401,
                     message: "Mày Đã Bị Chặn 3 Ngày Vì Thích Nghịch WEB TAO DCMM!",
-                    ip: ip,
+                    ip: (0, encryptedData_1.encryptedDataString)(ip),
                 });
                 return;
             }
@@ -85,7 +86,7 @@ const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
                 res.status(401).json({
                     code: 401,
                     message: "Bạn Đã Bị Block Truy Cập Vì Sử Dụng Quá Nhiều Lần Trong 5 Phút!",
-                    ip: ip,
+                    ip: (0, encryptedData_1.encryptedDataString)(ip),
                 });
                 return;
             }
@@ -99,6 +100,7 @@ const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
         next();
     }
     catch (error) {
+        console.log(error);
         res.status(500).json({
             message: "Lỗi Server!",
             code: 500,

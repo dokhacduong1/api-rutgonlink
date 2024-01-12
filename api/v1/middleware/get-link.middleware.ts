@@ -10,14 +10,15 @@ import {
 import { Request, Response } from "express";
 import db from "../../../config/database";
 import { getPublicIpV6 } from "../../../helpers/getIp";
+import { decData, decDataString, encryptedData, encryptedDataString } from "../../../helpers/encryptedData";
 
 const getIp = async (ipLocal: string, ipCookie: string,req:Request) => {
   if (ipLocal) {
-    return ipLocal;
+    return decDataString(ipLocal);
   } else if (ipCookie) {
-    return ipCookie;
+    return decDataString(ipCookie);
   } else {
-    return req.headers['x-forwarded-for'];
+    return "11";
   }
 };
 
@@ -39,9 +40,8 @@ export const auth = async (
     }
     const ipLocal = req.body.ipLocal;
     const ipCookie = req.body.ipCookie;
-
+  
     const ip = await getIp(ipLocal, ipCookie,req);
-
     const querySnapshot = await getDocs(
       query(collection(db, "ip-check"), where("ip", "==", ip))
     );
@@ -71,7 +71,7 @@ export const auth = async (
         res.status(401).json({
           code: 401,
           message: "Mày Đã Bị Chặn 3 Ngày Vì Thích Nghịch WEB TAO DCMMM!",
-          ip: ip,
+          ip: encryptedDataString(ip),
         });
         return;
       }
@@ -84,7 +84,7 @@ export const auth = async (
         res.status(401).json({
           code: 401,
           message: "Mày Đã Bị Chặn 3 Ngày Vì Thích Nghịch WEB TAO DCMM!",
-          ip: ip,
+          ip: encryptedDataString(ip),
         });
         return;
       }
@@ -94,7 +94,7 @@ export const auth = async (
           code: 401,
           message:
             "Bạn Đã Bị Block Truy Cập Vì Sử Dụng Quá Nhiều Lần Trong 5 Phút!",
-          ip: ip,
+          ip: encryptedDataString(ip),
         });
         return;
       } else {
@@ -106,6 +106,7 @@ export const auth = async (
     req["ip-public"] = ip;
     next();
   } catch (error) {
+    console.log(error)
     res.status(500).json({
       message: "Lỗi Server!",
       code: 500,

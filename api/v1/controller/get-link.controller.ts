@@ -13,7 +13,7 @@ import {
   updateDoc,
   deleteDoc,
 } from "firebase/firestore";
-import { decData, encryptedData } from "../../../helpers/encryptedData";
+import { decData, encryptedData, encryptedDataString } from "../../../helpers/encryptedData";
 import dotenv from "dotenv";
 import { generateRandomString } from "../../../helpers/generateToken";
 dotenv.config();
@@ -59,7 +59,7 @@ export const getLink = async function (
       return;
     }
   
-    res.status(200).json({ link: dataResponse2.shortenedUrl, code: 200,ip: req["ip-public"] });
+    res.status(200).json({ link: dataResponse2.shortenedUrl, code: 200,ip: encryptedDataString(req["ip-public"]) });
   } catch (error) {
     //Thông báo lỗi 500 đến người dùng server lỗi.
     console.error("Error in API:", error);
