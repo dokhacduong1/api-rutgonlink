@@ -35,7 +35,6 @@ const getLink = function (req, res) {
                 free: "",
             };
             const docRef = yield (0, firestore_1.addDoc)((0, firestore_1.collection)(database_1.default, "get-key"), data);
-            console.log("Document written with ID: ", docRef.id);
             const encrypted = (0, encryptedData_1.encryptedData)(docRef.id);
             const randomAlias = (0, generateToken_1.generateRandomString)(10);
             const link = `https://web1s.com/api?token=${API_TOKEN}&url=${URL_MAIL}=${encrypted}&alias=${randomAlias}`;
