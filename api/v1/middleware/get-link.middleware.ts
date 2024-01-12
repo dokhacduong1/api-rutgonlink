@@ -70,7 +70,7 @@ export const auth = async (
         });
         res.status(401).json({
           code: 401,
-          message: "Mày Đã Bị Chặn 3 Ngày Vì Thích Nghịch WEB TAO DCMM!",
+          message: "Mày Đã Bị Chặn 3 Ngày Vì Thích Nghịch WEB TAO DCMMM!",
           ip: ip,
         });
         return;
