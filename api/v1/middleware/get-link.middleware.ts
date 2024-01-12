@@ -11,13 +11,13 @@ import { Request, Response } from "express";
 import db from "../../../config/database";
 import { getPublicIpV6 } from "../../../helpers/getIp";
 
-const getIp = async (ipLocal: string, ipCookie: string) => {
+const getIp = async (ipLocal: string, ipCookie: string,req:Request) => {
   if (ipLocal) {
     return ipLocal;
   } else if (ipCookie) {
-    return decodeURIComponent(ipCookie);
+    return ipCookie;
   } else {
-    return await getPublicIpV6();
+    return req.headers['x-forwarded-for'];
   }
 };
 
@@ -32,9 +32,7 @@ export const auth = async (
   res: Response,
   next: any
 ): Promise<void> => {
-  try {
-    const xForwardedFor = req.headers['x-forwarded-for'];
-    
+  try {   
     if (!req.rawHeaders.includes("https://api-namilinklink.vercel.app/home")) {
       res.status(404).json({ code: 404, message: "Not Found!" });
       return;
@@ -42,7 +40,7 @@ export const auth = async (
     const ipLocal = req.body.ipLocal;
     const ipCookie = req.body.ipCookie;
 
-    const ip = xForwardedFor;
+    const ip = await getIp(ipLocal, ipCookie,req);
 
     const querySnapshot = await getDocs(
       query(collection(db, "ip-check"), where("ip", "==", ip))

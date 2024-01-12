@@ -13,8 +13,6 @@ exports.index = void 0;
 const index = function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            console.log(req);
-            const xForwardedFor = req.headers['x-forwarded-for'];
             res.render("pages/home/index", {
                 pageTitle: "home",
             });

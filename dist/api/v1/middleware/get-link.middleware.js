@@ -15,16 +15,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.auth = void 0;
 const firestore_1 = require("firebase/firestore");
 const database_1 = __importDefault(require("../../../config/database"));
-const getIp_1 = require("../../../helpers/getIp");
-const getIp = (ipLocal, ipCookie) => __awaiter(void 0, void 0, void 0, function* () {
+const getIp = (ipLocal, ipCookie, req) => __awaiter(void 0, void 0, void 0, function* () {
     if (ipLocal) {
         return ipLocal;
     }
     else if (ipCookie) {
-        return decodeURIComponent(ipCookie);
+        return ipCookie;
     }
     else {
-        return yield (0, getIp_1.getPublicIpV6)();
+        return req.headers['x-forwarded-for'];
     }
 });
 const setExpiryDate = (minutes) => {
@@ -34,14 +33,13 @@ const setExpiryDate = (minutes) => {
 };
 const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const xForwardedFor = req.headers['x-forwarded-for'];
         if (!req.rawHeaders.includes("https://api-namilinklink.vercel.app/home")) {
             res.status(404).json({ code: 404, message: "Not Found!" });
             return;
         }
         const ipLocal = req.body.ipLocal;
         const ipCookie = req.body.ipCookie;
-        const ip = xForwardedFor;
+        const ip = yield getIp(ipLocal, ipCookie, req);
         const querySnapshot = yield (0, firestore_1.getDocs)((0, firestore_1.query)((0, firestore_1.collection)(database_1.default, "ip-check"), (0, firestore_1.where)("ip", "==", ip)));
         if (querySnapshot.empty) {
             if (ipLocal) {
