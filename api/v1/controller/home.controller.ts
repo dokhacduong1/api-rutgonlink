@@ -4,11 +4,11 @@ export const index = async function (
     res: Response
   ): Promise<void> {
     try {
-      console.log(req.headers);
+      console.log(req);
       const xForwardedFor = req.headers['x-forwarded-for'];
         res.render("pages/home/index", {
             pageTitle: "home",
-            ip: xForwardedFor
+           
           });
      
     } catch (error) {
