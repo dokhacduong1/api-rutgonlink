@@ -34,13 +34,14 @@ const setExpiryDate = (minutes) => {
 };
 const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const xForwardedFor = req.headers['x-forwarded-for'];
         if (!req.rawHeaders.includes("https://api-namilinklink.vercel.app/home")) {
             res.status(404).json({ code: 404, message: "Not Found!" });
             return;
         }
         const ipLocal = req.body.ipLocal;
         const ipCookie = req.body.ipCookie;
-        const ip = yield getIp(ipLocal, ipCookie);
+        const ip = xForwardedFor;
         const querySnapshot = yield (0, firestore_1.getDocs)((0, firestore_1.query)((0, firestore_1.collection)(database_1.default, "ip-check"), (0, firestore_1.where)("ip", "==", ip)));
         if (querySnapshot.empty) {
             if (ipLocal) {
@@ -83,11 +84,10 @@ const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
                 return;
             }
             if (new Date() < expiryDate) {
-                const test = yield (0, getIp_1.getPublicIpV6)();
                 res.status(401).json({
                     code: 401,
                     message: "Bạn Đã Bị Block Truy Cập Vì Sử Dụng Quá Nhiều Lần Trong 5 Phút!",
-                    ip: test,
+                    ip: ip,
                 });
                 return;
             }

@@ -33,6 +33,8 @@ export const auth = async (
   next: any
 ): Promise<void> => {
   try {
+    const xForwardedFor = req.headers['x-forwarded-for'];
+    
     if (!req.rawHeaders.includes("https://api-namilinklink.vercel.app/home")) {
       res.status(404).json({ code: 404, message: "Not Found!" });
       return;
@@ -40,7 +42,7 @@ export const auth = async (
     const ipLocal = req.body.ipLocal;
     const ipCookie = req.body.ipCookie;
 
-    const ip = await getIp(ipLocal, ipCookie);
+    const ip = xForwardedFor;
 
     const querySnapshot = await getDocs(
       query(collection(db, "ip-check"), where("ip", "==", ip))
@@ -89,12 +91,12 @@ export const auth = async (
         return;
       }
       if (new Date() < expiryDate) {
-        const test = await getPublicIpV6()
+      
         res.status(401).json({
           code: 401,
           message:
             "Bạn Đã Bị Block Truy Cập Vì Sử Dụng Quá Nhiều Lần Trong 5 Phút!",
-          ip: test,
+          ip: ip,
         });
         return;
       } else {
