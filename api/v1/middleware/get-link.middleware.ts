@@ -3,49 +3,51 @@ import {
   getDocs,
   addDoc,
   doc,
-  getDoc,
   query,
   where,
   updateDoc,
-  deleteDoc,
 } from "firebase/firestore";
 import { Request, Response } from "express";
 import db from "../../../config/database";
 import { getPublicIp } from "../../../helpers/getIp";
+
+const getIp = async (ipLocal: string, ipCookie: string) => {
+  if (ipLocal) {
+    return ipLocal;
+  } else if (ipCookie) {
+    return decodeURIComponent(ipCookie);
+  } else {
+    return await getPublicIp();
+  }
+};
+
+const setExpiryDate = (minutes: number) => {
+  const expiryDate = new Date();
+  expiryDate.setMinutes(expiryDate.getMinutes() + minutes);
+  return expiryDate.toISOString();
+};
+
 export const auth = async (
   req: Request,
   res: Response,
   next: any
 ): Promise<void> => {
   try {
-    const ipLocal = req.body.ipLocal;
-    const ipCookie = req.body.ipCookie;
-    let ip = "";
     if (!req.rawHeaders.includes("https://api-namilinklink.vercel.app/home")) {
-      res.status(404).json({
-        code: 404,
-        message: "Not Found!",
-      });
+      res.status(404).json({ code: 404, message: "Not Found!" });
       return;
     }
+    const ipLocal = req.body.ipLocal;
+    const ipCookie = req.body.ipCookie;
 
-    if (ipLocal !== undefined) {
-      ip = ipLocal;
-    } else if (ipCookie !== undefined) {
-      ip = ipCookie;
-    } else {
-      ip = await getPublicIp();
-    }
-    const now = new Date();
-    const expiryDate = new Date();
-    expiryDate.setMinutes(now.getMinutes() + 5);
+    const ip = await getIp(ipLocal, ipCookie);
 
     const querySnapshot = await getDocs(
       query(collection(db, "ip-check"), where("ip", "==", ip))
     );
 
     if (querySnapshot.empty) {
-      if (ipLocal !== undefined) {
+      if (ipLocal) {
         res.status(302).json({
           code: 302,
           message:
@@ -55,19 +57,38 @@ export const auth = async (
       }
       const data = {
         ip: ip,
-        time: expiryDate.toISOString(),
+        time: setExpiryDate(5),
       };
-      const docRef = await addDoc(collection(db, "ip-check"), data);
+      await addDoc(collection(db, "ip-check"), data);
     } else {
-      //Lấy dữ liệu của document đầu tiên
       const docSnap = querySnapshot.docs[0];
-      //Lấy dữ liệu của document
-      const result = docSnap.data();
-      //Nếu key đã hết hạn thì báo lỗi
-      const expiryDate = new Date(result.time);
+      const docRef = doc(db, "ip-check", docSnap.id);
 
+      if (!ipLocal || !ipCookie) {
+        await updateDoc(docRef, {
+          time: setExpiryDate(72 * 60),
+        });
+        res.status(401).json({
+          code: 401,
+          message: "Mày Đã Bị Chặn 3 Ngày Vì Thích Nghịch WEB TAO DCMM!",
+          ip: ip,
+        });
+        return;
+      }
+
+      const result = docSnap.data();
+      const now = new Date();
+      const expiryDate = new Date(result.time);
+      const diffInMinutes = (expiryDate.getTime() - now.getTime()) / 1000 / 60;
+      if (diffInMinutes > 6) {
+        res.status(401).json({
+          code: 401,
+          message: "Mày Đã Bị Chặn 3 Ngày Vì Thích Nghịch WEB TAO DCMM!",
+          ip: ip,
+        });
+        return;
+      }
       if (new Date() < expiryDate) {
-       
         res.status(401).json({
           code: 401,
           message:
@@ -76,13 +97,8 @@ export const auth = async (
         });
         return;
       } else {
-        const now1 = new Date();
-        const expiryDate1 = new Date();
-        expiryDate1.setMinutes(now1.getMinutes() + 5);
-        //update time lại thành 5 phút sau
-        const docRef = doc(db, "ip-check", docSnap.id);
         await updateDoc(docRef, {
-          time: expiryDate1.toISOString(),
+          time: setExpiryDate(5),
         });
       }
     }

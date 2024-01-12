@@ -16,33 +16,34 @@ exports.auth = void 0;
 const firestore_1 = require("firebase/firestore");
 const database_1 = __importDefault(require("../../../config/database"));
 const getIp_1 = require("../../../helpers/getIp");
+const getIp = (ipLocal, ipCookie) => __awaiter(void 0, void 0, void 0, function* () {
+    if (ipLocal) {
+        return ipLocal;
+    }
+    else if (ipCookie) {
+        return decodeURIComponent(ipCookie);
+    }
+    else {
+        return yield (0, getIp_1.getPublicIp)();
+    }
+});
+const setExpiryDate = (minutes) => {
+    const expiryDate = new Date();
+    expiryDate.setMinutes(expiryDate.getMinutes() + minutes);
+    return expiryDate.toISOString();
+};
 const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const ipLocal = req.body.ipLocal;
-        const ipCookie = req.body.ipCookie;
-        let ip = "";
         if (!req.rawHeaders.includes("https://api-namilinklink.vercel.app/home")) {
-            res.status(404).json({
-                code: 404,
-                message: "Not Found!",
-            });
+            res.status(404).json({ code: 404, message: "Not Found!" });
             return;
         }
-        if (ipLocal !== undefined) {
-            ip = ipLocal;
-        }
-        else if (ipCookie !== undefined) {
-            ip = ipCookie;
-        }
-        else {
-            ip = yield (0, getIp_1.getPublicIp)();
-        }
-        const now = new Date();
-        const expiryDate = new Date();
-        expiryDate.setMinutes(now.getMinutes() + 5);
+        const ipLocal = req.body.ipLocal;
+        const ipCookie = req.body.ipCookie;
+        const ip = yield getIp(ipLocal, ipCookie);
         const querySnapshot = yield (0, firestore_1.getDocs)((0, firestore_1.query)((0, firestore_1.collection)(database_1.default, "ip-check"), (0, firestore_1.where)("ip", "==", ip)));
         if (querySnapshot.empty) {
-            if (ipLocal !== undefined) {
+            if (ipLocal) {
                 res.status(302).json({
                     code: 302,
                     message: "Đừng Nghịch Lung Tung Hãy Thay Đổi Lại Giá Trị Bạn Đã Nghịch Trước Đó!",
@@ -51,14 +52,36 @@ const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
             }
             const data = {
                 ip: ip,
-                time: expiryDate.toISOString(),
+                time: setExpiryDate(5),
             };
-            const docRef = yield (0, firestore_1.addDoc)((0, firestore_1.collection)(database_1.default, "ip-check"), data);
+            yield (0, firestore_1.addDoc)((0, firestore_1.collection)(database_1.default, "ip-check"), data);
         }
         else {
             const docSnap = querySnapshot.docs[0];
+            const docRef = (0, firestore_1.doc)(database_1.default, "ip-check", docSnap.id);
+            if (!ipLocal || !ipCookie) {
+                yield (0, firestore_1.updateDoc)(docRef, {
+                    time: setExpiryDate(72 * 60),
+                });
+                res.status(401).json({
+                    code: 401,
+                    message: "Mày Đã Bị Chặn 3 Ngày Vì Thích Nghịch WEB TAO DCMM!",
+                    ip: ip,
+                });
+                return;
+            }
             const result = docSnap.data();
+            const now = new Date();
             const expiryDate = new Date(result.time);
+            const diffInMinutes = (expiryDate.getTime() - now.getTime()) / 1000 / 60;
+            if (diffInMinutes > 6) {
+                res.status(401).json({
+                    code: 401,
+                    message: "Mày Đã Bị Chặn 3 Ngày Vì Thích Nghịch WEB TAO DCMM!",
+                    ip: ip,
+                });
+                return;
+            }
             if (new Date() < expiryDate) {
                 res.status(401).json({
                     code: 401,
@@ -68,12 +91,8 @@ const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
                 return;
             }
             else {
-                const now1 = new Date();
-                const expiryDate1 = new Date();
-                expiryDate1.setMinutes(now1.getMinutes() + 5);
-                const docRef = (0, firestore_1.doc)(database_1.default, "ip-check", docSnap.id);
                 yield (0, firestore_1.updateDoc)(docRef, {
-                    time: expiryDate1.toISOString(),
+                    time: setExpiryDate(5),
                 });
             }
         }

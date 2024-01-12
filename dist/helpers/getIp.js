@@ -16,8 +16,8 @@ exports.getPublicIp = void 0;
 const axios_1 = __importDefault(require("axios"));
 function getPublicIp() {
     return __awaiter(this, void 0, void 0, function* () {
-        const response = yield axios_1.default.get('https://api.ipify.org?format=json');
-        return response.data.ip;
+        const response = yield axios_1.default.get('https://api.ip.sb/ip');
+        return response.data;
     });
 }
 exports.getPublicIp = getPublicIp;
