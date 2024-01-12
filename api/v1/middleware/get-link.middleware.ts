@@ -18,7 +18,7 @@ const getIp = async (ipLocal: string, ipCookie: string,req:Request) => {
   } else if (ipCookie) {
     return decDataString(ipCookie);
   } else {
-    return "11";
+    return req.headers['x-forwarded-for'];
   }
 };
 

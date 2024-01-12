@@ -24,7 +24,7 @@ const getIp = (ipLocal, ipCookie, req) => __awaiter(void 0, void 0, void 0, func
         return (0, encryptedData_1.decDataString)(ipCookie);
     }
     else {
-        return "11";
+        return req.headers['x-forwarded-for'];
     }
 });
 const setExpiryDate = (minutes) => {
