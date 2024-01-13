@@ -105,7 +105,7 @@ export const checkLink = async function (
   try {
     //Lấy dữ liệu người dùng gửi lên
     const { key, hwid } = req.body;
-
+//
     const querySnapshot = await getDocs(
       query(collection(db, "get-key"), where("key", "==", key))
     );
@@ -123,14 +123,14 @@ export const checkLink = async function (
     const result = docSnap.data();
     //Nếu tồn tại key miễn phí thì trả về dữ liệu
     if (result.free === "true") {
-      sendResponse(res, 200, "Key Còn Hạn!");
+      sendResponse(res, 200, "Đăng Nhập Thành Công!");
       return;
     }
     //Nếu hwid là rỗng thì cập nhật hwid
     if (result.hwid === "") {
       const docRef = doc(db, "get-key", docSnap.id);
       await updateDoc(docRef, { hwid });
-      sendResponse(res, 200, "Key Còn Hạn!");
+      sendResponse(res, 200, "Đăng Nhập Thành Công!");
       return;
     }
 
@@ -150,7 +150,7 @@ export const checkLink = async function (
       return;
     }
     //Nếu không có lỗi nào xảy ra thì trả về dữ liệu
-    sendResponse(res, 200, "Key Còn Hạn!");
+    sendResponse(res, 200, "Đăng Nhập Thành Công!");
     return;
   } catch (error) {
     sendResponse(res, 500, "Lỗi Server!");

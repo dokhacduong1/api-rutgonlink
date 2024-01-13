@@ -100,13 +100,13 @@ const checkLink = function (req, res) {
             const docSnap = querySnapshot.docs[0];
             const result = docSnap.data();
             if (result.free === "true") {
-                sendResponse(res, 200, "Key Còn Hạn!");
+                sendResponse(res, 200, "Đăng Nhập Thành Công!");
                 return;
             }
             if (result.hwid === "") {
                 const docRef = (0, firestore_1.doc)(database_1.default, "get-key", docSnap.id);
                 yield (0, firestore_1.updateDoc)(docRef, { hwid });
-                sendResponse(res, 200, "Key Còn Hạn!");
+                sendResponse(res, 200, "Đăng Nhập Thành Công!");
                 return;
             }
             if (result.hwid !== hwid) {
@@ -120,7 +120,7 @@ const checkLink = function (req, res) {
                 sendResponse(res, 400, "Key Đã Hết Hạn!");
                 return;
             }
-            sendResponse(res, 200, "Key Còn Hạn!");
+            sendResponse(res, 200, "Đăng Nhập Thành Công!");
             return;
         }
         catch (error) {
