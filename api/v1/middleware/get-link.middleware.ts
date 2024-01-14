@@ -111,7 +111,7 @@ export const auth = async (
         res.status(401).json({
           code: 401,
           message:
-            `Bạn Đã Bị Block Truy Cập Vì Sử Dụng Quá Nhiều Vui Lòng Thử Lại Trong Vòng ${secondsRemaining} Giây!`,
+            `Bạn Đã Bị Block Truy Cập Vì Sử Dụng Quá Nhiều Vui Lòng Thử Lại Trong Vòng ${Math.round(secondsRemaining)} Giây!`,
           ip: encryptedDataString(ip),
         });
         return;

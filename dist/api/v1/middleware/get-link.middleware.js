@@ -97,7 +97,7 @@ const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
                 const secondsRemaining = (expiryDate.getTime() - nowTime.getTime()) / 1000;
                 res.status(401).json({
                     code: 401,
-                    message: `Bạn Đã Bị Block Truy Cập Vì Sử Dụng Quá Nhiều Vui Lòng Thử Lại Trong Vòng ${secondsRemaining} Giây!`,
+                    message: `Bạn Đã Bị Block Truy Cập Vì Sử Dụng Quá Nhiều Vui Lòng Thử Lại Trong Vòng ${Math.round(secondsRemaining)} Giây!`,
                     ip: (0, encryptedData_1.encryptedDataString)(ip),
                 });
                 return;
