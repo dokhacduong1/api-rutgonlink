@@ -34,11 +34,13 @@ const homePost = function (req, res) {
         try {
             const ipLocal = req.body.namiv1;
             const ipCookie = req.body.namiv2;
+            console.log("mama", ipLocal, ipCookie);
             if (ipLocal && ipCookie) {
                 res.status(200).json({ gege: (0, encryptedData_1.encryptedDataString)(ipLocal) });
                 return;
             }
             const ip = req.headers["x-forwarded-for"];
+            console.log("mama2", ip);
             res.status(200).json({ gege: (0, encryptedData_1.encryptedDataString)(ip) });
         }
         catch (error) {

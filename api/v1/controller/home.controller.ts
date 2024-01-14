@@ -26,11 +26,13 @@ export const homePost = async function (
   try {
     const ipLocal = req.body.namiv1;
     const ipCookie = req.body.namiv2;
+    console.log("mama",ipLocal,ipCookie)
     if(ipLocal && ipCookie ){
       res.status(200).json({gege: encryptedDataString(ipLocal)});
       return;
     }
     const ip = req.headers["x-forwarded-for"];
+    console.log("mama2",ip)
     res.status(200).json({gege: encryptedDataString(ip)});
   } catch (error) {
     //Thông báo lỗi 500 đến người dùng server lỗi.
