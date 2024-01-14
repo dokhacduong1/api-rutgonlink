@@ -42,11 +42,11 @@ const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
         const ipCookie = req.body.ipCookie;
         const ipCheck = req.headers["x-forwarded-for"];
         const ip = yield getIp(ipLocal, ipCookie, req);
-        if (ipLocal !== ipCookie ||
+        if (!ipLocal ||
+            !ipCookie ||
+            ipLocal !== ipCookie ||
             (0, encryptedData_1.decDataString)(ipLocal) !== ipCheck ||
-            (0, encryptedData_1.decDataString)(ipCookie) !== ipCheck ||
-            !ipLocal ||
-            !ipCookie) {
+            (0, encryptedData_1.decDataString)(ipCookie) !== ipCheck) {
             const queryCheckBan = yield (0, firestore_1.getDocs)((0, firestore_1.query)((0, firestore_1.collection)(database_1.default, "ip-check"), (0, firestore_1.where)("ip", "==", ipCheck)));
             if (queryCheckBan.empty) {
                 const data = {

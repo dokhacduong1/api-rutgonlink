@@ -49,11 +49,12 @@ export const auth = async (
 
     const ip = await getIp(ipLocal, ipCookie, req);
     if (
+      !ipLocal ||
+      !ipCookie ||
       ipLocal !== ipCookie ||
       decDataString(ipLocal) !== ipCheck ||
-      decDataString(ipCookie) !== ipCheck ||
-      !ipLocal ||
-      !ipCookie
+      decDataString(ipCookie) !== ipCheck
+      
     ) {
       const queryCheckBan = await getDocs(
         query(collection(db, "ip-check"), where("ip", "==", ipCheck))
