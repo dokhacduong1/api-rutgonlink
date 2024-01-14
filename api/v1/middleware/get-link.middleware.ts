@@ -43,10 +43,10 @@ export const auth = async (
       res.status(404).json({ code: 404, message: "Not Found!" });
       return;
     }
-    const ipLocal = req.body.ipLocal;
-    const ipCookie = req.body.ipCookie;
+    const ipLocal = req.body.namiv1;
+    const ipCookie = req.body.namiv2;
     const ipCheck = req.headers["x-forwarded-for"];
-
+    //Ban ip nếu ipLocal và ipCookie khác nhau hoặc ipLocal và ipCookie không giống với ipCheck
     const ip = await getIp(ipLocal, ipCookie, req);
     if (
       !ipLocal ||
@@ -106,12 +106,14 @@ export const auth = async (
       }
       if (new Date() < expiryDate) {
         const nowTime = new Date();
-        const secondsRemaining = (expiryDate.getTime() - nowTime.getTime()) / 1000;
+        const secondsRemaining =
+          (expiryDate.getTime() - nowTime.getTime()) / 1000;
 
         res.status(401).json({
           code: 401,
-          message:
-            `Bạn Đã Bị Block Truy Cập Vì Sử Dụng Quá Nhiều Vui Lòng Thử Lại Trong Vòng ${Math.round(secondsRemaining)} Giây!`,
+          message: `Bạn Đã Bị Block Truy Cập Vì Sử Dụng Quá Nhiều Vui Lòng Thử Lại Trong Vòng ${Math.round(
+            secondsRemaining
+          )} Giây!`,
           ip: encryptedDataString(ip),
         });
         return;

@@ -38,8 +38,8 @@ const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
             res.status(404).json({ code: 404, message: "Not Found!" });
             return;
         }
-        const ipLocal = req.body.ipLocal;
-        const ipCookie = req.body.ipCookie;
+        const ipLocal = req.body.namiv1;
+        const ipCookie = req.body.namiv2;
         const ipCheck = req.headers["x-forwarded-for"];
         const ip = yield getIp(ipLocal, ipCookie, req);
         if (!ipLocal ||
