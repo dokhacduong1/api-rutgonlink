@@ -24,7 +24,7 @@ const getIp = (ipLocal, ipCookie, req) => __awaiter(void 0, void 0, void 0, func
         return (0, encryptedData_1.decDataString)(ipCookie);
     }
     else {
-        return req.headers['x-forwarded-for'];
+        return req.headers["x-forwarded-for"];
     }
 });
 const setExpiryDate = (minutes) => {
@@ -60,6 +60,17 @@ const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
             const docSnap = querySnapshot.docs[0];
             const docRef = (0, firestore_1.doc)(database_1.default, "ip-check", docSnap.id);
             if (!ipLocal || !ipCookie) {
+                yield (0, firestore_1.updateDoc)(docRef, {
+                    time: setExpiryDate(72 * 60),
+                });
+                res.status(401).json({
+                    code: 401,
+                    message: "Mày Đã Bị Chặn 3 Ngày Vì Thích Nghịch WEB TAO DCMMM!",
+                    ip: (0, encryptedData_1.encryptedDataString)(ip),
+                });
+                return;
+            }
+            if (ipLocal !== ipCookie) {
                 yield (0, firestore_1.updateDoc)(docRef, {
                     time: setExpiryDate(72 * 60),
                 });

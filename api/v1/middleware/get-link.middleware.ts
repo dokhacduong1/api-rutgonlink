@@ -10,15 +10,20 @@ import {
 import { Request, Response } from "express";
 import db from "../../../config/database";
 import { getPublicIpV6 } from "../../../helpers/getIp";
-import { decData, decDataString, encryptedData, encryptedDataString } from "../../../helpers/encryptedData";
+import {
+  decData,
+  decDataString,
+  encryptedData,
+  encryptedDataString,
+} from "../../../helpers/encryptedData";
 
-const getIp = async (ipLocal: string, ipCookie: string,req:Request) => {
+const getIp = async (ipLocal: string, ipCookie: string, req: Request) => {
   if (ipLocal) {
     return decDataString(ipLocal);
   } else if (ipCookie) {
     return decDataString(ipCookie);
   } else {
-    return req.headers['x-forwarded-for'];
+    return req.headers["x-forwarded-for"];
   }
 };
 
@@ -33,15 +38,15 @@ export const auth = async (
   res: Response,
   next: any
 ): Promise<void> => {
-  try {   
+  try {
     if (!req.rawHeaders.includes("https://api-namilinklink.vercel.app/home")) {
       res.status(404).json({ code: 404, message: "Not Found!" });
       return;
     }
     const ipLocal = req.body.ipLocal;
     const ipCookie = req.body.ipCookie;
-  
-    const ip = await getIp(ipLocal, ipCookie,req);
+
+    const ip = await getIp(ipLocal, ipCookie, req);
     const querySnapshot = await getDocs(
       query(collection(db, "ip-check"), where("ip", "==", ip))
     );
@@ -76,6 +81,19 @@ export const auth = async (
         return;
       }
 
+      if (ipLocal !== ipCookie) {
+          await updateDoc(docRef, {
+            time: setExpiryDate(72 * 60),
+          });
+          res.status(401).json({
+            code: 401,
+            message: "Mày Đã Bị Chặn 3 Ngày Vì Thích Nghịch WEB TAO DCMMM!",
+            ip: encryptedDataString(ip),
+          });
+          return; 
+      }
+     
+
       const result = docSnap.data();
       const now = new Date();
       const expiryDate = new Date(result.time);
@@ -89,7 +107,6 @@ export const auth = async (
         return;
       }
       if (new Date() < expiryDate) {
-      
         res.status(401).json({
           code: 401,
           message:
@@ -106,7 +123,7 @@ export const auth = async (
     req["ip-public"] = ip;
     next();
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(500).json({
       message: "Lỗi Server!",
       code: 500,
