@@ -10,11 +10,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.index = void 0;
+const encryptedData_1 = require("../../../helpers/encryptedData");
 const index = function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            const ip = req.headers['x-forwarded-for'];
             res.render("pages/home/index", {
                 pageTitle: "home",
+                ip: (0, encryptedData_1.encryptedDataString)(ip)
             });
         }
         catch (error) {
