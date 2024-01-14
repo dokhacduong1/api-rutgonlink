@@ -45,21 +45,22 @@ export const auth = async (
     }
     const ipLocal = req.body.ipLocal;
     const ipCookie = req.body.ipCookie;
-
+    const ipCheck = decDataString(req.headers["x-forwarded-for"]);
+    if ((ipLocal !== ipCookie) || (ipLocal !==ipCheck) || (ipCookie !== ipCheck)) {
+      res.status(302).json({
+        code: 302,
+        message:
+          "DM Mày Thích Nghịch Không Tao Ban Chết Cụ Mày Giờ!",
+      });
+      return;
+    }
     const ip = await getIp(ipLocal, ipCookie, req);
     const querySnapshot = await getDocs(
       query(collection(db, "ip-check"), where("ip", "==", ip))
     );
-
+    //Vào đây là chưa có ip trong database
     if (querySnapshot.empty) {
-      if (ipLocal) {
-        res.status(302).json({
-          code: 302,
-          message:
-            "Đừng Nghịch Lung Tung Hãy Thay Đổi Lại Giá Trị Bạn Đã Nghịch Trước Đó!",
-        });
-        return;
-      }
+     
       const data = {
         ip: ip,
         time: setExpiryDate(5),

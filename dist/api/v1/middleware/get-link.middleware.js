@@ -40,16 +40,17 @@ const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
         }
         const ipLocal = req.body.ipLocal;
         const ipCookie = req.body.ipCookie;
+        const ipCheck = (0, encryptedData_1.decDataString)(req.headers["x-forwarded-for"]);
+        if ((ipLocal !== ipCookie) || (ipLocal !== ipCheck) || (ipCookie !== ipCheck)) {
+            res.status(302).json({
+                code: 302,
+                message: "DM Mày Thích Nghịch Không Tao Ban Chết Cụ Mày Giờ!",
+            });
+            return;
+        }
         const ip = yield getIp(ipLocal, ipCookie, req);
         const querySnapshot = yield (0, firestore_1.getDocs)((0, firestore_1.query)((0, firestore_1.collection)(database_1.default, "ip-check"), (0, firestore_1.where)("ip", "==", ip)));
         if (querySnapshot.empty) {
-            if (ipLocal) {
-                res.status(302).json({
-                    code: 302,
-                    message: "Đừng Nghịch Lung Tung Hãy Thay Đổi Lại Giá Trị Bạn Đã Nghịch Trước Đó!",
-                });
-                return;
-            }
             const data = {
                 ip: ip,
                 time: setExpiryDate(5),
