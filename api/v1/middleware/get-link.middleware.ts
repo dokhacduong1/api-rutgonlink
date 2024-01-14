@@ -100,7 +100,7 @@ export const auth = async (
       if (diffInMinutes > 6) {
         res.status(401).json({
           code: 401,
-          message: "Mày Đã Bị Chặn 3 Ngày Vì Thích Nghịch WEB TAO DCMM!",
+          message: "Bố Đã Bảo Mày Bị Ban 3 Ngày Rồi Mà `DCMM ĐỪNG ẤN NỮA!`",
           ip: encryptedDataString(ip),
         });
         return;
