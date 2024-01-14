@@ -9,15 +9,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.index = void 0;
+exports.homePost = exports.index = void 0;
 const encryptedData_1 = require("../../../helpers/encryptedData");
 const index = function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const ip = req.headers['x-forwarded-for'];
+            const ip = req.headers["x-forwarded-for"];
             res.render("pages/home/index", {
                 pageTitle: "home",
-                ip: (0, encryptedData_1.encryptedDataString)(ip)
+                ip: (0, encryptedData_1.encryptedDataString)(ip),
             });
         }
         catch (error) {
@@ -29,3 +29,24 @@ const index = function (req, res) {
     });
 };
 exports.index = index;
+const homePost = function (req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const ipLocal = req.body.namiv1;
+            const ipCookie = req.body.namiv2;
+            if (ipLocal && ipCookie) {
+                res.status(200).json({ gege: (0, encryptedData_1.encryptedDataString)(ipLocal) });
+                return;
+            }
+            const ip = req.headers["x-forwarded-for"];
+            res.status(200).json({ gege: (0, encryptedData_1.encryptedDataString)(ip) });
+        }
+        catch (error) {
+            console.error("Error in API:", error);
+            res.render("pages/errors/404", {
+                pageTitle: "404 Not Found",
+            });
+        }
+    });
+};
+exports.homePost = homePost;
