@@ -40,15 +40,35 @@ const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
         }
         const ipLocal = req.body.ipLocal;
         const ipCookie = req.body.ipCookie;
-        const ipCheck = (0, encryptedData_1.decDataString)(req.headers["x-forwarded-for"]);
-        if ((ipLocal !== ipCookie) || (ipLocal !== ipCheck) || (ipCookie !== ipCheck)) {
-            res.status(302).json({
-                code: 302,
-                message: "DM Mày Thích Nghịch Không Tao Ban Chết Cụ Mày Giờ!",
+        const ipCheck = req.headers["x-forwarded-for"];
+        const ip = yield getIp(ipLocal, ipCookie, req);
+        if (ipLocal !== ipCookie ||
+            (0, encryptedData_1.decDataString)(ipLocal) !== ipCheck ||
+            (0, encryptedData_1.decDataString)(ipCookie) !== ipCheck ||
+            !ipLocal ||
+            !ipCookie) {
+            const queryCheckBan = yield (0, firestore_1.getDocs)((0, firestore_1.query)((0, firestore_1.collection)(database_1.default, "ip-check"), (0, firestore_1.where)("ip", "==", ipCheck)));
+            if (queryCheckBan.empty) {
+                const data = {
+                    ip: ipCheck,
+                    time: setExpiryDate(72 * 60),
+                };
+                yield (0, firestore_1.addDoc)((0, firestore_1.collection)(database_1.default, "ip-check"), data);
+            }
+            else {
+                const docSnap = queryCheckBan.docs[0];
+                const docRef = (0, firestore_1.doc)(database_1.default, "ip-check", docSnap.id);
+                yield (0, firestore_1.updateDoc)(docRef, {
+                    time: setExpiryDate(72 * 60),
+                });
+            }
+            res.status(401).json({
+                code: 401,
+                message: "Mày Đã Bị Chặn 3 Ngày Vì Thích Nghịch WEB TAO DCMMM!",
+                ip: (0, encryptedData_1.encryptedDataString)(ip),
             });
             return;
         }
-        const ip = yield getIp(ipLocal, ipCookie, req);
         const querySnapshot = yield (0, firestore_1.getDocs)((0, firestore_1.query)((0, firestore_1.collection)(database_1.default, "ip-check"), (0, firestore_1.where)("ip", "==", ip)));
         if (querySnapshot.empty) {
             const data = {
@@ -60,28 +80,6 @@ const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
         else {
             const docSnap = querySnapshot.docs[0];
             const docRef = (0, firestore_1.doc)(database_1.default, "ip-check", docSnap.id);
-            if (!ipLocal || !ipCookie) {
-                yield (0, firestore_1.updateDoc)(docRef, {
-                    time: setExpiryDate(72 * 60),
-                });
-                res.status(401).json({
-                    code: 401,
-                    message: "Mày Đã Bị Chặn 3 Ngày Vì Thích Nghịch WEB TAO DCMMM!",
-                    ip: (0, encryptedData_1.encryptedDataString)(ip),
-                });
-                return;
-            }
-            if (ipLocal !== ipCookie) {
-                yield (0, firestore_1.updateDoc)(docRef, {
-                    time: setExpiryDate(72 * 60),
-                });
-                res.status(401).json({
-                    code: 401,
-                    message: "Mày Đã Bị Chặn 3 Ngày Vì Thích Nghịch WEB TAO DCMMM!",
-                    ip: (0, encryptedData_1.encryptedDataString)(ip),
-                });
-                return;
-            }
             const result = docSnap.data();
             const now = new Date();
             const expiryDate = new Date(result.time);

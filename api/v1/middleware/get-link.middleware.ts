@@ -45,22 +45,45 @@ export const auth = async (
     }
     const ipLocal = req.body.ipLocal;
     const ipCookie = req.body.ipCookie;
-    const ipCheck = decDataString(req.headers["x-forwarded-for"]);
-    if ((ipLocal !== ipCookie) || (ipLocal !==ipCheck) || (ipCookie !== ipCheck)) {
-      res.status(302).json({
-        code: 302,
-        message:
-          "DM Mày Thích Nghịch Không Tao Ban Chết Cụ Mày Giờ!",
+    const ipCheck = req.headers["x-forwarded-for"];
+
+    const ip = await getIp(ipLocal, ipCookie, req);
+    if (
+      ipLocal !== ipCookie ||
+      decDataString(ipLocal) !== ipCheck ||
+      decDataString(ipCookie) !== ipCheck ||
+      !ipLocal ||
+      !ipCookie
+    ) {
+      const queryCheckBan = await getDocs(
+        query(collection(db, "ip-check"), where("ip", "==", ipCheck))
+      );
+      if (queryCheckBan.empty) {
+        const data = {
+          ip: ipCheck,
+          time: setExpiryDate(72 * 60),
+        };
+        await addDoc(collection(db, "ip-check"), data);
+      } else {
+        const docSnap = queryCheckBan.docs[0];
+        const docRef = doc(db, "ip-check", docSnap.id);
+        await updateDoc(docRef, {
+          time: setExpiryDate(72 * 60),
+        });
+      }
+      res.status(401).json({
+        code: 401,
+        message: "Mày Đã Bị Chặn 3 Ngày Vì Thích Nghịch WEB TAO DCMMM!",
+        ip: encryptedDataString(ip),
       });
       return;
     }
-    const ip = await getIp(ipLocal, ipCookie, req);
+
     const querySnapshot = await getDocs(
       query(collection(db, "ip-check"), where("ip", "==", ip))
     );
     //Vào đây là chưa có ip trong database
     if (querySnapshot.empty) {
-     
       const data = {
         ip: ip,
         time: setExpiryDate(5),
@@ -69,32 +92,6 @@ export const auth = async (
     } else {
       const docSnap = querySnapshot.docs[0];
       const docRef = doc(db, "ip-check", docSnap.id);
-
-      if (!ipLocal || !ipCookie) {
-        await updateDoc(docRef, {
-          time: setExpiryDate(72 * 60),
-        });
-        res.status(401).json({
-          code: 401,
-          message: "Mày Đã Bị Chặn 3 Ngày Vì Thích Nghịch WEB TAO DCMMM!",
-          ip: encryptedDataString(ip),
-        });
-        return;
-      }
-
-      if (ipLocal !== ipCookie) {
-          await updateDoc(docRef, {
-            time: setExpiryDate(72 * 60),
-          });
-          res.status(401).json({
-            code: 401,
-            message: "Mày Đã Bị Chặn 3 Ngày Vì Thích Nghịch WEB TAO DCMMM!",
-            ip: encryptedDataString(ip),
-          });
-          return; 
-      }
-     
-
       const result = docSnap.data();
       const now = new Date();
       const expiryDate = new Date(result.time);
