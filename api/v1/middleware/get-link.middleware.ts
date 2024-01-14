@@ -54,7 +54,6 @@ export const auth = async (
       ipLocal !== ipCookie ||
       decDataString(ipLocal) !== ipCheck ||
       decDataString(ipCookie) !== ipCheck
-      
     ) {
       const queryCheckBan = await getDocs(
         query(collection(db, "ip-check"), where("ip", "==", ipCheck))
@@ -106,10 +105,13 @@ export const auth = async (
         return;
       }
       if (new Date() < expiryDate) {
+        const nowTime = new Date();
+        const secondsRemaining = (expiryDate.getTime() - nowTime.getTime()) / 1000;
+
         res.status(401).json({
           code: 401,
           message:
-            "Bạn Đã Bị Block Truy Cập Vì Sử Dụng Quá Nhiều Lần Trong 5 Phút!",
+            `Bạn Đã Bị Block Truy Cập Vì Sử Dụng Quá Nhiều Vui Lòng Thử Lại Trong Vòng ${secondsRemaining} Giây!`,
           ip: encryptedDataString(ip),
         });
         return;
