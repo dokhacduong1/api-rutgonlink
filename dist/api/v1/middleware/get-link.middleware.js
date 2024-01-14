@@ -54,20 +54,6 @@ const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
                     time: setExpiryDate(72 * 60),
                 };
                 yield (0, firestore_1.addDoc)((0, firestore_1.collection)(database_1.default, "ip-check"), data);
-                if (ipLocal) {
-                    const data = {
-                        ip: ipLocal,
-                        time: setExpiryDate(72 * 60),
-                    };
-                    yield (0, firestore_1.addDoc)((0, firestore_1.collection)(database_1.default, "ip-check"), data);
-                }
-                if (!ipLocal && ipCookie) {
-                    const data = {
-                        ip: ipCookie,
-                        time: setExpiryDate(72 * 60),
-                    };
-                    yield (0, firestore_1.addDoc)((0, firestore_1.collection)(database_1.default, "ip-check"), data);
-                }
             }
             else {
                 const docSnap = queryCheckBan.docs[0];

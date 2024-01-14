@@ -65,22 +65,8 @@ export const auth = async (
         };
         await addDoc(collection(db, "ip-check"), data);
 
-        if (ipLocal) {
-          const data = {
-            ip: ipLocal,
-            time: setExpiryDate(72 * 60),
-          };
-          await addDoc(collection(db, "ip-check"), data);
-        }
+       
 
-        if (!ipLocal && ipCookie) {
-          const data = {
-            ip: ipCookie,
-            time: setExpiryDate(72 * 60),
-          };
-          await addDoc(collection(db, "ip-check"), data);
-        }
-        
       } else {
         const docSnap = queryCheckBan.docs[0];
         const docRef = doc(db, "ip-check", docSnap.id);
