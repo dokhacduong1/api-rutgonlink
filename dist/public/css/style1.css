@@ -59,10 +59,11 @@
     color: white; /* Màu của text đã được bôi đen */
   }
 .main{
-  padding: 390px;
+  padding: 390px 0;
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
 }
 .main input{
   margin-right: 5px;
@@ -86,3 +87,4 @@
 .wait-link{
   display: none;
 }
+max-

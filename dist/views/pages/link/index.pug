@@ -2,5 +2,6 @@ extends ../../layout/default.pug
 include ../../mixins/pagination.pug
 block main
     div(class="container main")
-        input(type="text" value=data.key id="myInput")
-        button(type="button" class="btn btn-dark" onclick="myFunction()") Ấn để sao chép!
+        div.col-xl-12.col-lg-12.col-md-12.col-sm-12.col-12
+            input(type="text" value=data.key id="myInput")
+            button(type="button" class="btn btn-dark" onclick="myFunction()") Ấn để sao chép!
