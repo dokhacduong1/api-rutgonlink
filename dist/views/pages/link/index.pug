@@ -2,6 +2,6 @@ extends ../../layout/default.pug
 include ../../mixins/pagination.pug
 block main
     div(class="container main")
-        div.row
+        div.row.col-12
             textarea(type="text"  id="myInput").col-xl-5.col-lg-5.col-md-12.col-sm-12.col-12 #{value=data.key}
             button(type="button" class="btn btn-dark" onclick="myFunction()").col-xl-5.col-lg-4.col-md-12.col-sm-12.col-12 Ấn để sao chép!

@@ -67,18 +67,17 @@
 }
 .main textarea{
   margin-right: 10px;
-  margin-left: 10px;
+  margin-bottom: 10px;
   border: none;
   outline: none;
   border-radius: 5px;
   border: 1px solid #000000;
-  margin-bottom: 10px;
+
   padding: 0.375rem 0.75rem;
 }
 .main button{
-  margin-bottom: 10px;
   margin-right: 10px;
-  margin-left: 10px;
+  margin-bottom: 10px;
 }
 .error-404 img{
  
