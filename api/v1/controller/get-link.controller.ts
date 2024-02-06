@@ -78,10 +78,14 @@ export const success = async function (
     const id = req.query.key;
 
     const decId = decData(id);
+    console.log(decId);
     const docRef = doc(db, "get-key", decId);
     const docSnap = await getDoc(docRef);
     const data = docSnap.data();
-
+    if(!data){
+      data.key ="Key Không Tồn Tại!"
+    }
+    console.log(data);
     //Nếu tồn tại document thì trả về dữ liệu
     res.render("pages/link/index.pug", {
       pageTitle: "Key",
@@ -89,7 +93,7 @@ export const success = async function (
     });
   } catch (error) {
     //Thông báo lỗi 500 đến người dùng server lỗi.
-    console.error("Error in API:", error);
+   
     res.render("pages/errors/404", {
       pageTitle: "404 Not Found",
     });

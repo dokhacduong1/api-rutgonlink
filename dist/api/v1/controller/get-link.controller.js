@@ -68,16 +68,20 @@ const success = function (req, res) {
         try {
             const id = req.query.key;
             const decId = (0, encryptedData_1.decData)(id);
+            console.log(decId);
             const docRef = (0, firestore_1.doc)(database_1.default, "get-key", decId);
             const docSnap = yield (0, firestore_1.getDoc)(docRef);
             const data = docSnap.data();
+            if (!data) {
+                data.key = "Key Không Tồn Tại!";
+            }
+            console.log(data);
             res.render("pages/link/index.pug", {
                 pageTitle: "Key",
                 data: data,
             });
         }
         catch (error) {
-            console.error("Error in API:", error);
             res.render("pages/errors/404", {
                 pageTitle: "404 Not Found",
             });
