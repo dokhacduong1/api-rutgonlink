@@ -29,14 +29,14 @@ if (clickLink) {
         document.cookie = `fdsfdsjoisfdjklfdskldsf=${data.ip}; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
         window.location.href = data.link;
       }else if (data.code === 302) {
-        alert(data.message);
-        window.location.reload();
+        // alert(data.message);
+        // window.location.reload();
       }
        else if (data.code === 401) {
         localStorage.setItem('fdsfdsjoisfdjklfdskldsf', data.ip);
         document.cookie = `fdsfdsjoisfdjklfdskldsf=${data.ip}; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
-        alert(data.message);
-        window.location.reload();
+        // alert(data.message);
+        // window.location.reload();
       } else if (data.code === 500) {
         // alert(data.message)
         // window.location.reload();
