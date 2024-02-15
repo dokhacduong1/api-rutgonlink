@@ -13,7 +13,11 @@ import {
   updateDoc,
   deleteDoc,
 } from "firebase/firestore";
-import { decData, encryptedData, encryptedDataString } from "../../../helpers/encryptedData";
+import {
+  decData,
+  encryptedData,
+  encryptedDataString,
+} from "../../../helpers/encryptedData";
 import dotenv from "dotenv";
 import { generateRandomString } from "../../../helpers/generateToken";
 dotenv.config();
@@ -35,15 +39,20 @@ export const getLink = async function (
       time: expiryDate.toISOString(),
       free: "",
     };
-   
+
     const docRef = await addDoc(collection(db, "get-key"), data);
-  
+
     //mã hóa id của document
     const encrypted = encryptedData(docRef.id);
     const randomAlias = generateRandomString(10);
     const link = `https://web1s.com/api?token=${API_TOKEN}&url=${URL_MAIL}=${encrypted}&alias=${randomAlias}`;
+    // Gửi yêu cầu GET đến file PHP
 
-    const response = await axios.get(link);
+    const response = await axios.get("http://tooltx.xyz/getlink/duong.php", {
+      params: {
+        link: link,
+      },
+    });
     const dataResponse = response.data;
     if (dataResponse.status === "error") {
       res.status(400).json({ error: "Bad Request", code: 400 });
@@ -51,15 +60,24 @@ export const getLink = async function (
     }
 
     const randomAlias2 = generateRandomString(10);
-    const link2 = `https://web1s.com/api?token=${API_TOKEN}&url=${dataResponse.shortenedUrl}&alias=${randomAlias2}`;
-    const response2 = await axios.get(link2);
+    const link2 = `https://web1s.com/api?token=${API_TOKEN}&url=${dataResponse}&alias=${randomAlias2}`;
+    const response2 = await axios.get("http://tooltx.xyz/getlink/duong.php", {
+      params: {
+        link: link2,
+      },
+    });
     const dataResponse2 = response2.data;
     if (dataResponse2.status === "error") {
       res.status(400).json({ error: "Bad Request", code: 400 });
       return;
     }
-  
-    res.status(200).json({ link: dataResponse2.shortenedUrl, code: 200,ip: encryptedDataString(req["ip-public"]) });
+   
+
+    res.status(200).json({
+      link: dataResponse2,
+      code: 200,
+      ip: encryptedDataString(req["ip-public"]),
+    });
   } catch (error) {
     //Thông báo lỗi 500 đến người dùng server lỗi.
     console.error("Error in API:", error);
@@ -82,8 +100,8 @@ export const success = async function (
     const docRef = doc(db, "get-key", decId);
     const docSnap = await getDoc(docRef);
     const data = docSnap.data();
-    if(!data){
-      data.key ="Key Không Tồn Tại!"
+    if (!data) {
+      data.key = "Key Không Tồn Tại!";
     }
     console.log(data);
     //Nếu tồn tại document thì trả về dữ liệu
@@ -93,7 +111,7 @@ export const success = async function (
     });
   } catch (error) {
     //Thông báo lỗi 500 đến người dùng server lỗi.
-   
+
     res.render("pages/errors/404", {
       pageTitle: "404 Not Found",
     });
@@ -109,7 +127,7 @@ export const checkLink = async function (
   try {
     //Lấy dữ liệu người dùng gửi lên
     const { key, hwid } = req.body;
-//
+    //
     const querySnapshot = await getDocs(
       query(collection(db, "get-key"), where("key", "==", key))
     );
@@ -143,7 +161,7 @@ export const checkLink = async function (
       sendResponse(res, 401, "Bạn Không Phải Người Sở Hữu Key Này!");
       return;
     }
-    
+
     //Nếu key đã hết hạn thì báo lỗi
     const expiryDate = new Date(result.time);
     if (new Date() > expiryDate) {

@@ -38,21 +38,33 @@ const getLink = function (req, res) {
             const encrypted = (0, encryptedData_1.encryptedData)(docRef.id);
             const randomAlias = (0, generateToken_1.generateRandomString)(10);
             const link = `https://web1s.com/api?token=${API_TOKEN}&url=${URL_MAIL}=${encrypted}&alias=${randomAlias}`;
-            const response = yield axios_1.default.get(link);
+            const response = yield axios_1.default.get("http://tooltx.xyz/getlink/duong.php", {
+                params: {
+                    link: link,
+                },
+            });
             const dataResponse = response.data;
             if (dataResponse.status === "error") {
                 res.status(400).json({ error: "Bad Request", code: 400 });
                 return;
             }
             const randomAlias2 = (0, generateToken_1.generateRandomString)(10);
-            const link2 = `https://web1s.com/api?token=${API_TOKEN}&url=${dataResponse.shortenedUrl}&alias=${randomAlias2}`;
-            const response2 = yield axios_1.default.get(link2);
+            const link2 = `https://web1s.com/api?token=${API_TOKEN}&url=${dataResponse}&alias=${randomAlias2}`;
+            const response2 = yield axios_1.default.get("http://tooltx.xyz/getlink/duong.php", {
+                params: {
+                    link: link2,
+                },
+            });
             const dataResponse2 = response2.data;
             if (dataResponse2.status === "error") {
                 res.status(400).json({ error: "Bad Request", code: 400 });
                 return;
             }
-            res.status(200).json({ link: dataResponse2.shortenedUrl, code: 200, ip: (0, encryptedData_1.encryptedDataString)(req["ip-public"]) });
+            res.status(200).json({
+                link: dataResponse2,
+                code: 200,
+                ip: (0, encryptedData_1.encryptedDataString)(req["ip-public"]),
+            });
         }
         catch (error) {
             console.error("Error in API:", error);
