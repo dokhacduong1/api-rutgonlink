@@ -49,6 +49,8 @@ export const getLink = async function (
  
     const response  = await  fetch(link)
 
+    res.status(200).json({data:response})
+    return
     const dataResponse = await response.json();
 
     if (dataResponse.status === "error") {

@@ -62,6 +62,8 @@ const getLink = function (req, res) {
             const randomAlias = (0, generateToken_1.generateRandomString)(10);
             const link = `https://web1s.com/api?token=0968ea6f-6d4d-4af8-950d-8163ddcc319d&url=${URL_MAIL}=${encrypted}&alias=${randomAlias}`;
             const response = yield fetch(link);
+            res.status(200).json({ data: response });
+            return;
             const dataResponse = yield response.json();
             if (dataResponse.status === "error") {
                 res.status(400).json({ error: "Bad Request", code: 400 });
