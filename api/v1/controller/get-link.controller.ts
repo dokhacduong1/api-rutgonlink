@@ -22,6 +22,8 @@ import dotenv from "dotenv";
 import { generateRandomString } from "../../../helpers/generateToken";
 dotenv.config();
 const API_TOKEN = process.env.TOKEN_WEB1S;
+const LINK_API_CALL_PHP = process.env.LINK_API_CALL_PHP;
+console.log(LINK_API_CALL_PHP);
 const URL_MAIL =
   "https://api-namilinklink.vercel.app/api/v1/get-link/success?key";
 // [POST] /api/v1/get-link/
