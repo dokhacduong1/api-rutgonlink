@@ -44,7 +44,7 @@ export const getLink = async function (
     //mã hóa id của document
     const encrypted = encryptedData(docRef.id);
     const randomAlias = generateRandomString(10);
-    const link = `https://web1s.com/api?token=0968ea6f-6d4d-4af8-950d-8163ddcc319d&url=${URL_MAIL}=${encrypted}&alias=${randomAlias}`;
+    const link = `https://web1s.com/api?token=533f989a-d273-4f09-b0b8-79cdf1e1ff82&url=${URL_MAIL}=${encrypted}&alias=${randomAlias}`;
 
     const response1 = await superagent.get(link).set('Content-Type', 'application/json');;
     const data1 = response1.body;
