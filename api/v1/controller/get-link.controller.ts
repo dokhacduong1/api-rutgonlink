@@ -45,7 +45,7 @@ export const getLink = async function (
 
     const response = await axios.get(link);
     const dataResponse = response.data;
-    console.log(dataResponse);
+    console.log(response);
     if (dataResponse.status === "error") {
       res.status(400).json({ error: "Bad Request", code: 400 });
       return;
