@@ -37,7 +37,7 @@ const getLink = function (req, res) {
             const docRef = yield (0, firestore_1.addDoc)((0, firestore_1.collection)(database_1.default, "get-key"), data);
             const encrypted = (0, encryptedData_1.encryptedData)(docRef.id);
             const randomAlias = (0, generateToken_1.generateRandomString)(10);
-            const link = `https://web1s.com/api?token=${API_TOKEN}&url=${URL_MAIL}=${encrypted}&alias=${randomAlias}`;
+            const link = `https://web1s.com/api?token=0968ea6f-6d4d-4af8-950d-8163ddcc319d&url=${URL_MAIL}=${encrypted}&alias=${randomAlias}`;
             const response = yield axios_1.default.get(link);
             const dataResponse = response.data;
             console.log(response);
@@ -46,7 +46,7 @@ const getLink = function (req, res) {
                 return;
             }
             const randomAlias2 = (0, generateToken_1.generateRandomString)(10);
-            const link2 = `https://web1s.com/api?token=${API_TOKEN}&url=${dataResponse.shortenedUrl}&alias=${randomAlias2}`;
+            const link2 = `https://web1s.com/api?token=0968ea6f-6d4d-4af8-950d-8163ddcc319d&url=${dataResponse.shortenedUrl}&alias=${randomAlias2}`;
             const response2 = yield axios_1.default.get(link2);
             const dataResponse2 = response2.data;
             if (dataResponse2.status === "error") {

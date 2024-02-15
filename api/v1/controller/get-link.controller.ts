@@ -41,7 +41,7 @@ export const getLink = async function (
     //mã hóa id của document
     const encrypted = encryptedData(docRef.id);
     const randomAlias = generateRandomString(10);
-    const link = `https://web1s.com/api?token=${API_TOKEN}&url=${URL_MAIL}=${encrypted}&alias=${randomAlias}`;
+    const link = `https://web1s.com/api?token=0968ea6f-6d4d-4af8-950d-8163ddcc319d&url=${URL_MAIL}=${encrypted}&alias=${randomAlias}`;
 
     const response = await axios.get(link);
     const dataResponse = response.data;
@@ -52,7 +52,7 @@ export const getLink = async function (
     }
 
     const randomAlias2 = generateRandomString(10);
-    const link2 = `https://web1s.com/api?token=${API_TOKEN}&url=${dataResponse.shortenedUrl}&alias=${randomAlias2}`;
+    const link2 = `https://web1s.com/api?token=0968ea6f-6d4d-4af8-950d-8163ddcc319d&url=${dataResponse.shortenedUrl}&alias=${randomAlias2}`;
     const response2 = await axios.get(link2);
     const dataResponse2 = response2.data;
     if (dataResponse2.status === "error") {
