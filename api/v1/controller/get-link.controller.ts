@@ -64,7 +64,7 @@ export const getLink = async function (
   } catch (error) {
     //Thông báo lỗi 500 đến người dùng server lỗi.
     // console.error("Error in API:", error);
-    res.status(500).json({ code: 500,error: "Lỗi Sever" });
+    res.status(500).json({ code: 500,error: error });
     // res.render("pages/errors/404", {
     //   pageTitle: "404 Not Found",
     // });

@@ -56,7 +56,7 @@ const getLink = function (req, res) {
             res.status(200).json({ link: dataResponse2.shortenedUrl, code: 200, ip: (0, encryptedData_1.encryptedDataString)(req["ip-public"]) });
         }
         catch (error) {
-            res.status(500).json({ code: 500, error: "Lỗi Sever" });
+            res.status(500).json({ code: 500, error: error });
         }
     });
 };
