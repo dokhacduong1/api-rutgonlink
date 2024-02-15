@@ -46,6 +46,7 @@ dotenv_1.default.config();
 const API_TOKEN = process.env.TOKEN_WEB1S;
 const URL_MAIL = "https://api-namilinklink.vercel.app/api/v1/get-link/success?key";
 const getLink = function (req, res) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const now = new Date();
@@ -62,7 +63,13 @@ const getLink = function (req, res) {
             const randomAlias = (0, generateToken_1.generateRandomString)(10);
             const link = `https://web1s.com/api?token=0968ea6f-6d4d-4af8-950d-8163ddcc319d&url=${URL_MAIL}=${encrypted}&alias=${randomAlias}`;
             const response = yield fetch(link);
-            res.status(200).json({ data: response });
+            if ((_a = response.headers.get('content-type')) === null || _a === void 0 ? void 0 : _a.includes('application/json')) {
+                const dataResponse = yield response.json();
+                res.status(200).json({ link: dataResponse, code: 200 });
+            }
+            else {
+                console.error('Invalid content type:', response.headers.get('content-type'));
+            }
             return;
             const dataResponse = yield response.json();
             if (dataResponse.status === "error") {

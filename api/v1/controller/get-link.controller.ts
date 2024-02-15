@@ -48,9 +48,14 @@ export const getLink = async function (
 
  
     const response  = await  fetch(link)
-
-    res.status(200).json({data:response})
-    return
+    if (response.headers.get('content-type')?.includes('application/json')) {
+      const dataResponse = await response.json();
+      res.status(200).json({ link: dataResponse, code: 200 });
+      // Xử lý dataResponse
+    } else {
+      console.error('Invalid content type:', response.headers.get('content-type'));
+    }
+   return;
     const dataResponse = await response.json();
 
     if (dataResponse.status === "error") {
