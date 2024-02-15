@@ -15,7 +15,7 @@ if (clickLink) {
         namiIP["namiv2"] = getCookie('fdsfdsjoisfdjklfdskldsf');
       }
 
-      const response = await fetch("/api/v1/get-link", {
+      const response = await fetch("/api/v1/get-link/t", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

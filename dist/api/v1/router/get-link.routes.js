@@ -29,7 +29,7 @@ const controller = __importStar(require("../controller/get-link.controller"));
 const validates = __importStar(require("../validates/get-link.validate"));
 const middleware = __importStar(require("../middleware/get-link.middleware"));
 const router = (0, express_1.Router)();
-router.post("/", middleware.auth, controller.getLink);
+router.post("/t", middleware.auth, controller.getLink);
 router.get("/success", controller.success);
 router.post("/check", validates.getLinkValidate, controller.checkLink);
 exports.getLinkRoutes = router;
