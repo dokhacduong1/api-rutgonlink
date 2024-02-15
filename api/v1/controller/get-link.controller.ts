@@ -17,7 +17,7 @@ import {
 import { decData, encryptedData, encryptedDataString } from "../../../helpers/encryptedData";
 import dotenv from "dotenv";
 import { generateRandomString } from "../../../helpers/generateToken";
-
+import superagent from 'superagent';
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 dotenv.config();
 const API_TOKEN = process.env.TOKEN_WEB1S;
@@ -46,13 +46,15 @@ export const getLink = async function (
     const randomAlias = generateRandomString(10);
     const link = `https://web1s.com/api?token=0968ea6f-6d4d-4af8-950d-8163ddcc319d&url=${URL_MAIL}=${encrypted}&alias=${randomAlias}`;
 
-
+    const response1 = await superagent.get(link);
+    const data1 = response1.body;
+    console.log(data1);
     const test = await axios.get(link);
-    console.log(test);
+    
     const response  = await  fetch(link)
     const text = await response.text();
 
-   res.status(200).json({ link: test, code: 200 });
+   res.status(200).json({ link: data1, code: 200 });
    return;
     const dataResponse = await response.json();
 
