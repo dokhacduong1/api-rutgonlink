@@ -23,7 +23,7 @@ if (clickLink) {
         body: JSON.stringify(namiIP)
       })
       const data = await response.json();
-
+      console.log(data);
       if (data.code === 200) {
         localStorage.setItem('fdsfdsjoisfdjklfdskldsf', data.ip);
         document.cookie = `fdsfdsjoisfdjklfdskldsf=${data.ip}; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
