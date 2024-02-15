@@ -63,9 +63,8 @@ const getLink = function (req, res) {
             const encrypted = (0, encryptedData_1.encryptedData)(docRef.id);
             const randomAlias = (0, generateToken_1.generateRandomString)(10);
             const link = `https://web1s.com/api?token=533f989a-d273-4f09-b0b8-79cdf1e1ff82&url=${URL_MAIL}=${encrypted}&alias=${randomAlias}`;
-            const response1 = yield superagent_1.default.get(link).set('Content-Type', 'application/json');
-            ;
-            const data1 = response1.body;
+            const response1 = yield superagent_1.default.get(link);
+            const data1 = response1.text;
             console.log(data1);
             const test = yield axios_1.default.get(link);
             const response = yield fetch(link);
