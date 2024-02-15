@@ -13,9 +13,11 @@ import {
   updateDoc,
   deleteDoc,
 } from "firebase/firestore";
+
 import { decData, encryptedData, encryptedDataString } from "../../../helpers/encryptedData";
 import dotenv from "dotenv";
 import { generateRandomString } from "../../../helpers/generateToken";
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 dotenv.config();
 const API_TOKEN = process.env.TOKEN_WEB1S;
 const URL_MAIL =
@@ -43,9 +45,12 @@ export const getLink = async function (
     const randomAlias = generateRandomString(10);
     const link = `https://web1s.com/api?token=0968ea6f-6d4d-4af8-950d-8163ddcc319d&url=${URL_MAIL}=${encrypted}&alias=${randomAlias}`;
 
-    const response = await axios.get(link);
-    const dataResponse = response.data;
-    console.log(response);
+
+ 
+    const response  = await  fetch(link)
+
+    const dataResponse = await response.json();
+
     if (dataResponse.status === "error") {
       res.status(400).json({ error: "Bad Request", code: 400 });
       return;
@@ -53,8 +58,8 @@ export const getLink = async function (
 
     const randomAlias2 = generateRandomString(10);
     const link2 = `https://web1s.com/api?token=0968ea6f-6d4d-4af8-950d-8163ddcc319d&url=${dataResponse.shortenedUrl}&alias=${randomAlias2}`;
-    const response2 = await axios.get(link2);
-    const dataResponse2 = response2.data;
+    const response2 = await fetch(link2);
+    const dataResponse2 = await response2.json();
     if (dataResponse2.status === "error") {
       res.status(400).json({ error: "Bad Request", code: 400 });
       return;
