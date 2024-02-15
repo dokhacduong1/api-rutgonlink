@@ -28,6 +28,5 @@ const express_1 = require("express");
 const controller = __importStar(require("../controller/home.controller"));
 const router = (0, express_1.Router)();
 router.get("/", controller.index);
-router.get("/duong-test-ne-haha", controller.indexTest);
 router.post("/t", controller.homePost);
 exports.homeRoutes = router;

@@ -39,17 +39,15 @@ export const auth = async (
   next: any
 ): Promise<void> => {
   try {
-    if (!req.rawHeaders.includes("https://api-namilinklink.vercel.app/home/duong-test-ne-haha")) {
+    if (!req.rawHeaders.includes("https://api-namilinklink.vercel.app/home")) {
       res.status(404).json({ code: 404, message: "Not Found!" });
       return;
     }
     const ipLocal = req.body.namiv1;
     const ipCookie = req.body.namiv2;
     const ipCheck = req.headers["x-forwarded-for"];
-    
     //Ban ip nếu ipLocal và ipCookie khác nhau hoặc ipLocal và ipCookie không giống với ipCheck
     const ip = await getIp(ipLocal, ipCookie, req);
-    console.log(decDataString(ipLocal), ipCookie, ipCheck);
     if (
       !ipLocal ||
       !ipCookie ||
@@ -60,7 +58,6 @@ export const auth = async (
       const queryCheckBan = await getDocs(
         query(collection(db, "ip-check"), where("ip", "==", ipCheck))
       );
-
       if (queryCheckBan.empty) {
         const data = {
           ip: ipCheck,

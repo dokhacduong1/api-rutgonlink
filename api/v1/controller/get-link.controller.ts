@@ -13,12 +13,9 @@ import {
   updateDoc,
   deleteDoc,
 } from "firebase/firestore";
-
 import { decData, encryptedData, encryptedDataString } from "../../../helpers/encryptedData";
 import dotenv from "dotenv";
 import { generateRandomString } from "../../../helpers/generateToken";
-import superagent from 'superagent';
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 dotenv.config();
 const API_TOKEN = process.env.TOKEN_WEB1S;
 const URL_MAIL =
@@ -44,28 +41,19 @@ export const getLink = async function (
     //mã hóa id của document
     const encrypted = encryptedData(docRef.id);
     const randomAlias = generateRandomString(10);
-    const link = `https://web1s.com/api?token=533f989a-d273-4f09-b0b8-79cdf1e1ff82&url=${URL_MAIL}=${encrypted}&alias=${randomAlias}`;
+    const link = `https://web1s.com/api?token=${API_TOKEN}&url=${URL_MAIL}=${encrypted}&alias=${randomAlias}`;
 
-
-
-    const test = await axios.get(link);
-    
-    const response  = await  fetch(link)
-    const text = await response.text();
-
-   res.status(200).json({ link: test, code: 200 });
-   return;
-    const dataResponse = await response.json();
-
+    const response = await axios.get(link);
+    const dataResponse = response.data;
     if (dataResponse.status === "error") {
       res.status(400).json({ error: "Bad Request", code: 400 });
       return;
     }
 
     const randomAlias2 = generateRandomString(10);
-    const link2 = `https://web1s.com/api?token=0968ea6f-6d4d-4af8-950d-8163ddcc319d&url=${dataResponse.shortenedUrl}&alias=${randomAlias2}`;
-    const response2 = await fetch(link2);
-    const dataResponse2 = await response2.json();
+    const link2 = `https://web1s.com/api?token=${API_TOKEN}&url=${dataResponse.shortenedUrl}&alias=${randomAlias2}`;
+    const response2 = await axios.get(link2);
+    const dataResponse2 = response2.data;
     if (dataResponse2.status === "error") {
       res.status(400).json({ error: "Bad Request", code: 400 });
       return;
@@ -74,11 +62,10 @@ export const getLink = async function (
     res.status(200).json({ link: dataResponse2.shortenedUrl, code: 200,ip: encryptedDataString(req["ip-public"]) });
   } catch (error) {
     //Thông báo lỗi 500 đến người dùng server lỗi.
-    // console.error("Error in API:", error);
-    res.status(500).json({ code: 500,error: error });
-    // res.render("pages/errors/404", {
-    //   pageTitle: "404 Not Found",
-    // });
+    console.error("Error in API:", error);
+    res.render("pages/errors/404", {
+      pageTitle: "404 Not Found",
+    });
   }
 };
 
