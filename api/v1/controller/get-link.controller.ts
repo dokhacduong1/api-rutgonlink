@@ -63,7 +63,7 @@ export const getLink = async function (
     res.status(200).json({ link: dataResponse2.shortenedUrl, code: 200,ip: encryptedDataString(req["ip-public"]) });
   } catch (error) {
     //Thông báo lỗi 500 đến người dùng server lỗi.
-    console.error("Error in API:", error);
+    // console.error("Error in API:", error);
     res.status(500).json({ code: 500,error: "Lỗi Sever" });
     // res.render("pages/errors/404", {
     //   pageTitle: "404 Not Found",
