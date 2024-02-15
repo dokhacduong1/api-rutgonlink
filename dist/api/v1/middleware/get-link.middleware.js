@@ -34,7 +34,7 @@ const setExpiryDate = (minutes) => {
 };
 const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if (!req.rawHeaders.includes("https://api-namilinklink.vercel.app/home")) {
+        if (!req.rawHeaders.includes("https://api-namilinklink.vercel.app/home/duong-test-ne-haha")) {
             res.status(404).json({ code: 404, message: "Not Found!" });
             return;
         }

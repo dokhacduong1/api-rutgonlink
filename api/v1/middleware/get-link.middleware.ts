@@ -39,7 +39,7 @@ export const auth = async (
   next: any
 ): Promise<void> => {
   try {
-    if (!req.rawHeaders.includes("https://api-namilinklink.vercel.app/home")) {
+    if (!req.rawHeaders.includes("https://api-namilinklink.vercel.app/home/duong-test-ne-haha")) {
       res.status(404).json({ code: 404, message: "Not Found!" });
       return;
     }
