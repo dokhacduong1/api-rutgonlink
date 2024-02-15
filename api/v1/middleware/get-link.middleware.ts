@@ -46,9 +46,10 @@ export const auth = async (
     const ipLocal = req.body.namiv1;
     const ipCookie = req.body.namiv2;
     const ipCheck = req.headers["x-forwarded-for"];
+    // const ipCheck = "27.71.47.131";
     //Ban ip nếu ipLocal và ipCookie khác nhau hoặc ipLocal và ipCookie không giống với ipCheck
     const ip = await getIp(ipLocal, ipCookie, req);
-
+    console.log(decDataString(ipLocal), ipCookie, ipCheck);
     if (
       !ipLocal ||
       !ipCookie ||

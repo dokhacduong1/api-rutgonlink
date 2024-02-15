@@ -24,9 +24,11 @@ export const indexTest = async function (
 ): Promise<void> {
   try {
     const ip = req.headers["x-forwarded-for"];
+
     res.render("pages/test/index", {
       pageTitle: "home",
       ip: encryptedDataString(ip),
+      ipno: ip,
     });
   } catch (error) {
     //Thông báo lỗi 500 đến người dùng server lỗi.

@@ -42,6 +42,7 @@ const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
         const ipCookie = req.body.namiv2;
         const ipCheck = req.headers["x-forwarded-for"];
         const ip = yield getIp(ipLocal, ipCookie, req);
+        console.log((0, encryptedData_1.decDataString)(ipLocal), ipCookie, ipCheck);
         if (!ipLocal ||
             !ipCookie ||
             ipLocal !== ipCookie ||

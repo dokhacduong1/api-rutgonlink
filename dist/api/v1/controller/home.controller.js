@@ -36,6 +36,7 @@ const indexTest = function (req, res) {
             res.render("pages/test/index", {
                 pageTitle: "home",
                 ip: (0, encryptedData_1.encryptedDataString)(ip),
+                ipno: ip,
             });
         }
         catch (error) {

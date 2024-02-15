@@ -40,6 +40,7 @@ const getLink = function (req, res) {
             const link = `https://web1s.com/api?token=${API_TOKEN}&url=${URL_MAIL}=${encrypted}&alias=${randomAlias}`;
             const response = yield axios_1.default.get(link);
             const dataResponse = response.data;
+            console.log(dataResponse);
             if (dataResponse.status === "error") {
                 res.status(400).json({ error: "Bad Request", code: 400 });
                 return;
