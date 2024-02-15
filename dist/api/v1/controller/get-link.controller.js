@@ -57,9 +57,7 @@ const getLink = function (req, res) {
         }
         catch (error) {
             console.error("Error in API:", error);
-            res.render("pages/errors/404", {
-                pageTitle: "404 Not Found",
-            });
+            res.status(500).json({ code: 500, error: error });
         }
     });
 };
