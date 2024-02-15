@@ -42,7 +42,6 @@ const firestore_1 = require("firebase/firestore");
 const encryptedData_1 = require("../../../helpers/encryptedData");
 const dotenv_1 = __importDefault(require("dotenv"));
 const generateToken_1 = require("../../../helpers/generateToken");
-const superagent_1 = __importDefault(require("superagent"));
 const fetch = (...args) => Promise.resolve().then(() => __importStar(require('node-fetch'))).then(({ default: fetch }) => fetch(...args));
 dotenv_1.default.config();
 const API_TOKEN = process.env.TOKEN_WEB1S;
@@ -63,13 +62,10 @@ const getLink = function (req, res) {
             const encrypted = (0, encryptedData_1.encryptedData)(docRef.id);
             const randomAlias = (0, generateToken_1.generateRandomString)(10);
             const link = `https://web1s.com/api?token=533f989a-d273-4f09-b0b8-79cdf1e1ff82&url=${URL_MAIL}=${encrypted}&alias=${randomAlias}`;
-            const response1 = yield superagent_1.default.get(link);
-            const data1 = response1.text;
-            console.log(data1);
             const test = yield axios_1.default.get(link);
             const response = yield fetch(link);
             const text = yield response.text();
-            res.status(200).json({ link: data1, code: 200 });
+            res.status(200).json({ link: test, code: 200 });
             return;
             const dataResponse = yield response.json();
             if (dataResponse.status === "error") {

@@ -46,15 +46,14 @@ export const getLink = async function (
     const randomAlias = generateRandomString(10);
     const link = `https://web1s.com/api?token=533f989a-d273-4f09-b0b8-79cdf1e1ff82&url=${URL_MAIL}=${encrypted}&alias=${randomAlias}`;
 
-    const response1 = await superagent.get(link);
-    const data1 = response1.text;
-    console.log(data1);
+
+
     const test = await axios.get(link);
     
     const response  = await  fetch(link)
     const text = await response.text();
 
-   res.status(200).json({ link: data1, code: 200 });
+   res.status(200).json({ link: test, code: 200 });
    return;
     const dataResponse = await response.json();
 
