@@ -23,7 +23,7 @@ import { generateRandomString } from "../../../helpers/generateToken";
 dotenv.config();
 const API_TOKEN = process.env.TOKEN_WEB1S;
 const LINK_API_CALL_PHP = process.env.LINK_API_CALL_PHP;
-console.log(LINK_API_CALL_PHP);
+
 const URL_MAIL =
   "https://api-namilinklink.vercel.app/api/v1/get-link/success?key";
 // [POST] /api/v1/get-link/
@@ -50,7 +50,7 @@ export const getLink = async function (
     const link = `https://web1s.com/api?token=${API_TOKEN}&url=${URL_MAIL}=${encrypted}&alias=${randomAlias}`;
     // Gửi yêu cầu GET đến file PHP
 
-    const response = await axios.get("http://tooltx.xyz/getlink/duong.php", {
+    const response = await axios.get(LINK_API_CALL_PHP , {
       params: {
         link: link,
       },
@@ -63,7 +63,7 @@ export const getLink = async function (
 
     const randomAlias2 = generateRandomString(10);
     const link2 = `https://web1s.com/api?token=${API_TOKEN}&url=${dataResponse}&alias=${randomAlias2}`;
-    const response2 = await axios.get("http://tooltx.xyz/getlink/duong.php", {
+    const response2 = await axios.get(LINK_API_CALL_PHP , {
       params: {
         link: link2,
       },
