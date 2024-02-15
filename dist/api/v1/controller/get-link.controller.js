@@ -57,7 +57,7 @@ const getLink = function (req, res) {
         }
         catch (error) {
             console.error("Error in API:", error);
-            res.status(500).json({ code: 500, error: error });
+            res.status(500).json({ code: 500, error: "Lỗi Sever" });
         }
     });
 };
