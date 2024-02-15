@@ -48,6 +48,7 @@ export const auth = async (
     const ipCheck = req.headers["x-forwarded-for"];
     //Ban ip nếu ipLocal và ipCookie khác nhau hoặc ipLocal và ipCookie không giống với ipCheck
     const ip = await getIp(ipLocal, ipCookie, req);
+
     if (
       !ipLocal ||
       !ipCookie ||
@@ -58,6 +59,7 @@ export const auth = async (
       const queryCheckBan = await getDocs(
         query(collection(db, "ip-check"), where("ip", "==", ipCheck))
       );
+
       if (queryCheckBan.empty) {
         const data = {
           ip: ipCheck,

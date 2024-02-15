@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.homePost = exports.index = void 0;
+exports.homePost = exports.indexTest = exports.index = void 0;
 const encryptedData_1 = require("../../../helpers/encryptedData");
 const index = function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -29,6 +29,24 @@ const index = function (req, res) {
     });
 };
 exports.index = index;
+const indexTest = function (req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const ip = req.headers["x-forwarded-for"];
+            res.render("pages/test/index", {
+                pageTitle: "home",
+                ip: (0, encryptedData_1.encryptedDataString)(ip),
+            });
+        }
+        catch (error) {
+            console.error("Error in API:", error);
+            res.render("pages/errors/404", {
+                pageTitle: "404 Not Found",
+            });
+        }
+    });
+};
+exports.indexTest = indexTest;
 const homePost = function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
