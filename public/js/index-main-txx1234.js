@@ -25,9 +25,9 @@ if (clickLink) {
       const data = await response.json();
       console.log(data);
       if (data.code === 200) {
-        localStorage.setItem('fdsfdsjoisfdjklfdskldsf', data.ip);
-        document.cookie = `fdsfdsjoisfdjklfdskldsf=${data.ip}; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
-        window.location.href = data.link;
+        // localStorage.setItem('fdsfdsjoisfdjklfdskldsf', data.ip);
+        // document.cookie = `fdsfdsjoisfdjklfdskldsf=${data.ip}; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
+        // window.location.href = data.link;
       }else if (data.code === 302) {
         // alert(data.message);
         // window.location.reload();
