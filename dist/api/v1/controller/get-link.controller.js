@@ -63,6 +63,7 @@ const getLink = function (req, res) {
             const link = `https://web1s.com/api?token=0968ea6f-6d4d-4af8-950d-8163ddcc319d&url=${URL_MAIL}=${encrypted}&alias=${randomAlias}`;
             const response = yield fetch(link);
             const text = yield response.text();
+            console.log(text);
             res.status(200).json({ link: text, code: 200 });
             return;
             const dataResponse = yield response.json();

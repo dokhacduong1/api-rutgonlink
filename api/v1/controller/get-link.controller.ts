@@ -49,6 +49,7 @@ export const getLink = async function (
  
     const response  = await  fetch(link)
     const text = await response.text();
+    console.log(text);
    res.status(200).json({ link: text, code: 200 });
    return;
     const dataResponse = await response.json();
