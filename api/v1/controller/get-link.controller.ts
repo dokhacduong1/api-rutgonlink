@@ -50,7 +50,7 @@ export const getLink = async function (
     const link = `https://web1s.com/api?token=${API_TOKEN}&url=${URL_MAIL}=${encrypted}&alias=${randomAlias}`;
     // Gửi yêu cầu GET đến file PHP
 
-    const response = await axios.get(LINK_API_CALL_PHP , {
+    const response = await axios.get(LINK_API_CALL_PHP, {
       params: {
         link: link,
       },
@@ -63,7 +63,7 @@ export const getLink = async function (
 
     const randomAlias2 = generateRandomString(10);
     const link2 = `https://web1s.com/api?token=${API_TOKEN}&url=${dataResponse}&alias=${randomAlias2}`;
-    const response2 = await axios.get(LINK_API_CALL_PHP , {
+    const response2 = await axios.get(LINK_API_CALL_PHP, {
       params: {
         link: link2,
       },
@@ -73,7 +73,6 @@ export const getLink = async function (
       res.status(400).json({ error: "Bad Request", code: 400 });
       return;
     }
-   
 
     res.status(200).json({
       link: dataResponse2,
@@ -176,6 +175,34 @@ export const checkLink = async function (
     //Nếu không có lỗi nào xảy ra thì trả về dữ liệu
     sendResponse(res, 200, "Đăng Nhập Thành Công!");
     return;
+  } catch (error) {
+    sendResponse(res, 500, "Lỗi Server!");
+    return;
+  }
+};
+
+export const keyValidate = async function (
+  req: Request,
+  res: Response
+): Promise<void> {
+  try {
+    const now = new Date();
+    const querySnapshot = await getDocs(
+      query(collection(db, "get-key"), where("time", "<", now.toISOString()))
+    );
+
+    const deletePromises = querySnapshot.docs.map((docMap) => {
+     
+      const docRef = doc(db, "get-key", docMap.id);
+      deleteDoc(docRef);
+    });
+    if (deletePromises.length > 0) {
+      await Promise.all(deletePromises);
+      res.status(200).json({ message: `Đã xóa ${deletePromises.length} bản ghi` });
+      return;
+    } 
+      res.status(200).json({ message: "Không có bản ghi nào được xóa" });
+    1
   } catch (error) {
     sendResponse(res, 500, "Lỗi Server!");
     return;

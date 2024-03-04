@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkLink = exports.success = exports.getLink = void 0;
+exports.keyValidate = exports.checkLink = exports.success = exports.getLink = void 0;
 const axios_1 = __importDefault(require("axios"));
 const database_1 = __importDefault(require("../../../config/database"));
 const firestore_1 = require("firebase/firestore");
@@ -147,6 +147,30 @@ const checkLink = function (req, res) {
     });
 };
 exports.checkLink = checkLink;
+const keyValidate = function (req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const now = new Date();
+            const querySnapshot = yield (0, firestore_1.getDocs)((0, firestore_1.query)((0, firestore_1.collection)(database_1.default, "get-key"), (0, firestore_1.where)("time", "<", now.toISOString())));
+            const deletePromises = querySnapshot.docs.map((docMap) => {
+                const docRef = (0, firestore_1.doc)(database_1.default, "get-key", docMap.id);
+                (0, firestore_1.deleteDoc)(docRef);
+            });
+            if (deletePromises.length > 0) {
+                yield Promise.all(deletePromises);
+                res.status(200).json({ message: `Đã xóa ${deletePromises.length} bản ghi` });
+                return;
+            }
+            res.status(200).json({ message: "Không có bản ghi nào được xóa" });
+            1;
+        }
+        catch (error) {
+            sendResponse(res, 500, "Lỗi Server!");
+            return;
+        }
+    });
+};
+exports.keyValidate = keyValidate;
 function sendResponse(res, code, message) {
     return res.status(code).json({
         message,

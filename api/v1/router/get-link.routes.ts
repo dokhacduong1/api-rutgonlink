@@ -6,4 +6,5 @@ const router : Router = Router();
 router.post("/",middleware.auth,controller.getLink)
 router.get("/success",controller.success)
 router.post("/check",validates.getLinkValidate,controller.checkLink)
+router.get("/key-validate",controller.keyValidate)
 export const getLinkRoutes : Router  = router

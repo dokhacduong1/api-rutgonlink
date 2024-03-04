@@ -32,4 +32,5 @@ const router = (0, express_1.Router)();
 router.post("/", middleware.auth, controller.getLink);
 router.get("/success", controller.success);
 router.post("/check", validates.getLinkValidate, controller.checkLink);
+router.get("/key-validate", controller.keyValidate);
 exports.getLinkRoutes = router;
