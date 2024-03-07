@@ -48,47 +48,48 @@ export const auth = async (
     const ipCheck = req.headers["x-forwarded-for"];
     //Ban ip nếu ipLocal và ipCookie khác nhau hoặc ipLocal và ipCookie không giống với ipCheck
     const ip = await getIp(ipLocal, ipCookie, req);
-    if (
-      !ipLocal ||
-      !ipCookie ||
-      ipLocal !== ipCookie ||
-      decDataString(ipLocal) !== ipCheck ||
-      decDataString(ipCookie) !== ipCheck
-    ) {
-      const queryCheckBan = await getDocs(
-        query(collection(db, "ip-check"), where("ip", "==", ipCheck))
-      );
-      if (queryCheckBan.empty) {
-        const data = {
-          ip: ipCheck,
-          time: setExpiryDate(72 * 60),
-        };
-        await addDoc(collection(db, "ip-check"), data);
+
+    // if (
+    //   !ipLocal ||
+    //   !ipCookie ||
+    //   ipLocal !== ipCookie ||
+    //   decDataString(ipLocal) !== ipCheck ||
+    //   decDataString(ipCookie) !== ipCheck
+    // ) {
+    //   const queryCheckBan = await getDocs(
+    //     query(collection(db, "ip-check"), where("ip", "==", ipCheck))
+    //   );
+    //   if (queryCheckBan.empty) {
+    //     const data = {
+    //       ip: ipCheck,
+    //       time: setExpiryDate(72 * 60),
+    //     };
+    //     await addDoc(collection(db, "ip-check"), data);
 
        
 
-      } else {
-        const docSnap = queryCheckBan.docs[0];
-        const docRef = doc(db, "ip-check", docSnap.id);
-        await updateDoc(docRef, {
-          time: setExpiryDate(72 * 60),
-        });
-      }
-      res.status(401).json({
-        code: 401,
-        message: "Mày Đã Bị Chặn 3 Ngày Vì Thích Nghịch WEB TAO DCMMM!",
-        ip: encryptedDataString(ip),
-      });
-      return;
-    }
+    //   } else {
+    //     const docSnap = queryCheckBan.docs[0];
+    //     const docRef = doc(db, "ip-check", docSnap.id);
+    //     await updateDoc(docRef, {
+    //       time: setExpiryDate(72 * 60),
+    //     });
+    //   }
+    //   res.status(401).json({
+    //     code: 401,
+    //     message: "Mày Đã Bị Chặn 3 Ngày Vì Thích Nghịch WEB TAO DCMMM!",
+    //     ip: encryptedDataString(ip),
+    //   });
+    //   return;
+    // }
 
     const querySnapshot = await getDocs(
-      query(collection(db, "ip-check"), where("ip", "==", ip))
+      query(collection(db, "ip-check"), where("ip", "==", ipCheck))
     );
     //Vào đây là chưa có ip trong database
     if (querySnapshot.empty) {
       const data = {
-        ip: ip,
+        ip: ipCheck,
         time: setExpiryDate(5),
       };
       await addDoc(collection(db, "ip-check"), data);
@@ -126,7 +127,7 @@ export const auth = async (
         });
       }
     }
-    req["ip-public"] = ip;
+    req["ip-public"] = ipCheck;
     next();
   } catch (error) {
     console.log(error);
